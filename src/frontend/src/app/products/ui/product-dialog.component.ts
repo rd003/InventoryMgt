@@ -24,16 +24,16 @@ import { CategoryModel } from "../../category/category.model";
 import { MatSelectModule } from "@angular/material/select";
 
 @Component({
-    selector: "app-product-dialog",
-    imports: [
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSelectModule,
-        MatDialogModule,
-    ],
-    template: `
+  selector: "app-product-dialog",
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatDialogModule,
+  ],
+  template: `
     <h1 mat-dialog-title>
       {{ data.title }}
     </h1>
@@ -78,8 +78,8 @@ import { MatSelectModule } from "@angular/material/select";
       </button>
     </div>
   `,
-    styles: [
-        `
+  styles: [
+    `
       .product-form {
         padding: 10px;
         display: flex;
@@ -90,17 +90,18 @@ import { MatSelectModule } from "@angular/material/select";
       mat-form-field {
         width: 500px;
       }
-      // .product-form {
-      //   display: grid;
-      //   grid-template-columns: repeat(
-      //     3,
-      //     1fr
-      //   ); /* Three columns with equal width */
-      //   gap: 16px; /* Adjust the gap between columns as needed */
-      // }
+       
+       /*.product-form {
+         display: grid;
+         grid-template-columns: repeat(
+           3,
+           1fr
+         ); 
+         gap: 16px; 
+       }*/
     `,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDialogComponent {
   @Output() sumbit = new EventEmitter<Product>();

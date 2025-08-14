@@ -7,7 +7,7 @@ import {
 import { provideComponentStore } from "@ngrx/component-store";
 import { CategoryStore } from "../category/category.store";
 import { ProductStore } from "./product.store";
-import { AsyncPipe, NgFor, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ProductListComponent } from "./ui/product-list.component";
 import { ProductFilterComponent } from "./ui/product-filter.component";
 import { Product } from "./product.model";
@@ -23,8 +23,6 @@ import { capitalize } from "../utils/init-cap.util";
 @Component({
   selector: "app-product",
   imports: [
-    NgIf,
-    NgFor,
     AsyncPipe,
     ProductListComponent,
     ProductFilterComponent,
@@ -37,22 +35,25 @@ import { capitalize } from "../utils/init-cap.util";
     provideComponentStore(ProductStore),
   ],
   template: `
-    <div style="display: flex;align-items:center;gap:5px;margin-bottom:8px">
-      <span style="font-size: 26px;font-weight:bold"> Products </span>
-      <button
+    <h1>Products</h1>
+    <button style="margin:10px 0px"
         mat-raised-button
         color="primary"
         (click)="onAddUpdate('Add Product')"
       >
         Add More
       </button>
-    </div>
-    <ng-container *ngIf="vm$ | async as vm" style="position: relative;">
-      <div *ngIf="vm.loading" class="spinner-center">
-        <mat-spinner diameter="50"></mat-spinner>
-      </div>
+
+    @if(vm$ | async; as vm)
+    {
+      @if(vm.loading){
+        <div class="spinner-center">
+          <mat-spinner diameter="50"></mat-spinner>
+        </div>
+      }
+      
+      @if(vm.products && vm.products.length > 0){
       <app-product-filter (filter)="onSearch($event)" />
-      <div *ngIf="vm.products && vm.products.length > 0; else no_records">
         <app-product-list
           [products]="vm.products"
           (edit)="onAddUpdate('Update Product', $event)"
@@ -63,13 +64,13 @@ import { capitalize } from "../utils/init-cap.util";
           (pageSelect)="onPageSelect($event)"
           [totalRecords]="vm.totalRecords"
         />
-      </div>
-      <ng-template #no_records>
+      }
+      @else{
         <p style="margin-top:20px;font-size:21px">
           No records found
-        </p></ng-template
-      >
-    </ng-container>
+        </p>
+      }
+    }
   `,
   styles: [``],
   changeDetection: ChangeDetectionStrategy.OnPush

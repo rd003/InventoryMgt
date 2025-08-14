@@ -18,7 +18,7 @@ I have built this project in **early 2024** with `.net 8 ` and `angular 17`. I h
 ## How to run the project in dev environment
 
 - Make sure to install dotnet 9 sdk,latest node js and angular cli.
-- **Clone this project:** Open terminal and execute ``
+- **Clone this project:** Open terminal and run `git clone https://github.com/rd003/InventroyMgt.git`
 - `cd `
 - With command `code .`, your project will be opened in VS Code.
 - You need to run both projects separately:

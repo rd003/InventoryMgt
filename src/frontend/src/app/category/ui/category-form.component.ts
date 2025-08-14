@@ -18,21 +18,19 @@ import {
   Validators,
 } from "@angular/forms";
 import { CategoryModel } from "../category.model";
-import { NgFor } from "@angular/common";
 @Component({
-    selector: "app-category-form",
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatFormFieldModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSelectModule,
-        NgFor,
-    ],
-    styles: [``],
-    template: `
+  selector: "app-category-form",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+  ],
+  styles: [``],
+  template: `
     <form
       style="display: inline-flex;gap:10px;align-items:center"
       class="category-form"
@@ -53,11 +51,13 @@ import { NgFor } from "@angular/common";
         <mat-label>Parent Category</mat-label>
         <mat-select formControlName="categoryId">
           <mat-option value="null">None</mat-option>
-          <mat-option
-            *ngFor="let category of categories; trackBy: trackById"
+          @for(category of categories; track category.id)
+          {
+            <mat-option
             [value]="category.id"
             >{{ category.categoryName }}</mat-option
-          >
+            >
+          }
         </mat-select>
       </mat-form-field>
       <button
