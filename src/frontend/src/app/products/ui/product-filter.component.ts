@@ -11,16 +11,18 @@ import { MatInputModule } from "@angular/material/input";
 import { debounceTime, tap } from "rxjs";
 
 @Component({
-    selector: "app-product-filter",
-    imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
-    styles: [``],
-    template: `
+  selector: "app-product-filter",
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+  styles: [``],
+  template: `
+    <div class="display:block">
     <mat-form-field appearance="outline" style="width: 400px;">
       <mat-label>Search proudct/category</mat-label>
       <input matInput [formControl]="search" />
     </mat-form-field>
+    </div>
   `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductFilterComponent {
   search = new FormControl<string>("");

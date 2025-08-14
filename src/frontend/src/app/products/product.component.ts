@@ -35,14 +35,16 @@ import { capitalize } from "../utils/init-cap.util";
     provideComponentStore(ProductStore),
   ],
   template: `
-    <h1>Products</h1>
-    <button style="margin:10px 0px"
+      <div style="display: flex;align-items:center;gap:5px;margin-bottom:8px">
+        <span style="font-size: 26px;font-weight:bold"> Products </span>
+        <button style="margin:10px 0px"
         mat-raised-button
         color="primary"
         (click)="onAddUpdate('Add Product')"
       >
         Add More
       </button>
+      </div>
 
     @if(vm$ | async; as vm)
     {
@@ -53,7 +55,8 @@ import { capitalize } from "../utils/init-cap.util";
       }
       
       @if(vm.products && vm.products.length > 0){
-      <app-product-filter (filter)="onSearch($event)" />
+        <app-product-filter (filter)="onSearch($event)" />
+
         <app-product-list
           [products]="vm.products"
           (edit)="onAddUpdate('Update Product', $event)"

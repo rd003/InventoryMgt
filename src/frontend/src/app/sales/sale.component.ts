@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,7 +26,7 @@ import { SalePaginatorComponent } from "./ui/sale-paginator.component";
   providers: [provideComponentStore(SaleStore)],
   styles: [``],
   template: `
-    <ng-container *ngIf="products$ | async as products">
+  @if(products$ | async; as products){
       <div style="display: flex;align-items:center;gap:5px;margin-bottom:8px">
         <span style="font-size: 26px;font-weight:bold;"> Sales </span>
         <button
@@ -38,7 +38,7 @@ import { SalePaginatorComponent } from "./ui/sale-paginator.component";
         </button>
       </div>
 
-      <ng-container *ngIf="this.saleStore.vm$ | async as vm">
+      @if(this.saleStore.vm$ | async; as vm){
         @if(vm.loading){
         <div class="spinner-center">
           <mat-spinner diameter="50"></mat-spinner>
@@ -49,7 +49,7 @@ import { SalePaginatorComponent } from "./ui/sale-paginator.component";
           (searchProduct)="onSearch($event)"
           (filterByPurchaseDate)="onDateFilter($event)"
         />
-        <div *ngIf="vm.sales && vm.sales.length > 0; else no_records">
+        @if(vm.sales && vm.sales.length > 0){
           <app-sale-list
             [sales]="vm.sales"
             (edit)="onAddUpdate('Update', $event, products)"
@@ -61,19 +61,17 @@ import { SalePaginatorComponent } from "./ui/sale-paginator.component";
             [totalRecords]="vm.totalRecords"
             (pageSelect)="onPageSelect($event)"
           />
-        </div>
-        <ng-template #no_records>
+        }
+        @else{
           <p style="margin-top:20px;font-size:21px">
             No records found
-          </p></ng-template
-        >
-
+          </p>
         }
-      </ng-container>
-    </ng-container>
+        }
+      }
+    }
   `,
   imports: [
-    NgIf,
     AsyncPipe,
     MatButtonModule,
     MatProgressSpinnerModule,

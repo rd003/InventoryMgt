@@ -6,7 +6,7 @@ import {
 } from "@angular/core";
 import { provideComponentStore } from "@ngrx/component-store";
 import { PurchaseStore } from "./purchase.store";
-import { AsyncPipe, NgIf } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { PurchaseListComponent } from "./ui/purchase-list.component";
 import { capitalize } from "../utils/init-cap.util";
 import { PurchaseModel } from "./purchase.model";
@@ -25,7 +25,6 @@ import { ProductWithStock } from "../products/product-with-stock.model";
   imports: [
     AsyncPipe,
     PurchaseListComponent,
-    NgIf,
     PurchasePaginatorComponent,
     PurchaseFilters,
     MatButtonModule,
@@ -37,7 +36,8 @@ import { ProductWithStock } from "../products/product-with-stock.model";
   providers: [provideComponentStore(PurchaseStore)],
   styles: [``],
   template: `
-    <ng-container *ngIf="products$ | async as products">
+   @if(products$ | async; as products)
+    {
       <div style="display: flex;align-items:center;gap:5px;margin-bottom:8px">
         <span style="font-size: 26px;font-weight:bold"> Purchases </span>
         <button
@@ -48,11 +48,14 @@ import { ProductWithStock } from "../products/product-with-stock.model";
           Add More
         </button>
       </div>
-      <ng-container *ngIf="this.purchaseStore.vm$ | async as vm">
-        <div *ngIf="vm.loading" class="spinner-center">
+      @if(this.purchaseStore.vm$ | async; as vm){
+        @if(vm.loading){
+        <div class="spinner-center">
           <mat-spinner diameter="50"></mat-spinner>
         </div>
-        <div *ngIf="vm.purchases && vm.purchases.length > 0">
+        }
+       
+        @if(vm.purchases && vm.purchases.length > 0){
           <app-purchase-filters
             (searchProduct)="onSearch($event)"
             (filterByPurchaseDate)="onDateFilter($event)"
@@ -69,14 +72,14 @@ import { ProductWithStock } from "../products/product-with-stock.model";
             [totalRecords]="vm.totalRecords"
             (pageSelect)="onPageSelect($event)"
           />
-        </div>
-        <ng-template #no_records>
+        }
+        @else{
           <p style="margin-top:20px;font-size:21px">
             No records found
-          </p></ng-template
-        >
-      </ng-container>
-    </ng-container>
+          </p>
+        }
+      }
+    }
   `
 })
 export class PurchaseComponent implements OnDestroy {
