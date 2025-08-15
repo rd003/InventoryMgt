@@ -6,6 +6,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
 namespace InventoryMgt.Data.Repositories;
+
 public interface IProductRepository
 {
     Task<ProductDisplay> AddProduct(Product product);
@@ -27,14 +28,13 @@ public class ProductRepository : IProductRepository
     public async Task<ProductDisplay> AddProduct(Product product)
     {
         using IDbConnection connection = new SqlConnection(_constr);
-        ProductDisplay createdProduct = await connection.QueryFirstAsync<ProductDisplay>("Usp_AddProduct", new
-        {
-            ProductName = product.ProductName,
-            CategoryId = product.CategoryId,
-            Price = product.Price
-        }, commandType: CommandType.StoredProcedure);
-
-        return createdProduct;
+        string sql = @"insert into 
+                    product (product_name,category_id,supplier_id,price)
+                    values(@ProductName,@CategoryId,@SupplierId,@Price) 
+                    returning id;";
+        int createdProductId = await connection.ExecuteScalarAsync<int>(sql, product);
+        ProductDisplay? createdProduct = await GetProduct(createdProductId);
+        return createdProduct!; // I am sure, it won't be null
     }
 
     public async Task<ProductDisplay> UpdatProduct(Product product)
@@ -62,8 +62,17 @@ public class ProductRepository : IProductRepository
     public async Task<ProductDisplay?> GetProduct(int id)
     {
         using IDbConnection connection = new SqlConnection(_constr);
-        string sql = @"select p.*, c.CategoryName from Product p join Category c
-         on p.CategoryId=c.Id where p.IsDeleted=0 and c.IsDeleted=0 and p.Id=@id";
+        string sql = @"select 
+                        p.id,
+                        p.product_name,
+                        p.price,
+                        s.supplier_name,
+                        c.category_name 
+                    from product p 
+                    join category c on p.category_id = c.id
+                    join supplier s on p.supplier_id = s.id
+                    where p.is_deleted=false and c.is_deleted=false 
+                    where p.id = @Id";
         var product = await connection.QueryFirstOrDefaultAsync<ProductDisplay>(sql, new { id });
         return product;
     }
