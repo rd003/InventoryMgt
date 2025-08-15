@@ -4,7 +4,7 @@
 GET {{base_address}}
 
 ### get by id
-GET {{base_address}}/1
+GET {{base_address}}/3
 
 ### post
 POST {{base_address}}
@@ -18,13 +18,16 @@ Content-Type: application/json
 }
 
 ### put
-PUT {{base_address}}
+PUT {{base_address}}/3
 Content-Type: application/json
 
 {
-    "productName":"product2",
-    "categoryId":11,
-    "supplierId":2,
-    "price":80
+    "id":3,
+    "productName":"product21",
+    "categoryId":16,
+    "supplierId":1,
+    "price":81
 }
 
+### put
+DELETE  {{base_address}}/3

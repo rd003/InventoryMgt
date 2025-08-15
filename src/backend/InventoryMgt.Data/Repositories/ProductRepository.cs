@@ -47,8 +47,9 @@ public class ProductRepository : IProductRepository
                         supplier_id=@SupplierId,
                         price=@Price
                        where id=@Id;";
-        var updatedProduct = await connection.QueryFirstAsync<ProductDisplay>(sql, product);
-        return updatedProduct;
+        await connection.ExecuteAsync(sql, product);
+        var updatedProduct = await GetProduct(product.Id);
+        return updatedProduct!;
     }
 
     public async Task DeleteProduct(int id)
