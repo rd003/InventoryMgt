@@ -35,3 +35,6 @@ Content-Type: application/json
 
 ### put
 DELETE  {{base_address}}/3
+
+### Products with stock
+GET {{base_address}}/all-products-with-stock

@@ -7,15 +7,6 @@ using Npgsql;
 
 namespace InventoryMgt.Data.Repositories;
 
-public interface IProductRepository
-{
-    Task<ProductDisplay> AddProduct(Product product);
-    Task<ProductDisplay> UpdatProduct(Product product);
-    Task DeleteProduct(int id);
-    Task<PagedProduct> GetProducts(int page = 1, int limit = 4, string? searchTerm = null, string? sortColumn = null, string? sortDirection = null);
-    Task<ProductDisplay?> GetProduct(int id);
-    Task<IEnumerable<ProductWithStock>> GetAllProductsWithStock();
-}
 public class ProductRepository : IProductRepository
 {
     private readonly IConfiguration _config;
@@ -168,7 +159,18 @@ public class ProductRepository : IProductRepository
     public async Task<IEnumerable<ProductWithStock>> GetAllProductsWithStock()
     {
         using IDbConnection connection = new NpgsqlConnection(_constr);
-        var products = await connection.QueryAsync<ProductWithStock>("usp_GetAllProductsWithStock", commandType: CommandType.StoredProcedure);
+        string sql = @"select 
+                        p.id,
+                        p.product_name, 
+                        c.category_name,
+                        p.price,
+                    coalesce(s.Quantity,0) as quantity 
+                    from product p
+                    join category c on p.category_id=c.id
+                    left join stock s on p.id = s.product_id
+                    where p.is_deleted=false and c.is_deleted= false";
+
+        var products = await connection.QueryAsync<ProductWithStock>(sql);
         return products;
     }
 }
