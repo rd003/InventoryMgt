@@ -1,7 +1,7 @@
-
 using System.Text.Json;
 using InventoryMgt.Api.CustomExceptions;
 using InventoryMgt.Data.Models;
+using InventoryMgt.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryMgt.Api.Controllers;
@@ -19,7 +19,7 @@ public class PurchaseController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePurchase(Purchase purchase)
     {
-        var createdPurchaseRecord = await this._purchaseRepository.AddPurchase(purchase);
+        var createdPurchaseRecord = await _purchaseRepository.AddPurchase(purchase);
         return CreatedAtAction(nameof(CreatePurchase), createdPurchaseRecord);
     }
 

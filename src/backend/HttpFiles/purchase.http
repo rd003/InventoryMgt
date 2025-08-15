@@ -1,0 +1,16 @@
+@base_address = http://localhost:5131/api/purchases
+
+// get all
+GET {{base_address}}
+
+### post
+POST  {{base_address}}
+Content-Type: application/json
+
+{
+  "productId": 123,
+  "quantity": 50.5,
+  "purchaseDate": "2025-08-15T10:30",
+  "description": "Bulk purchase",
+  "price": 99.99
+}

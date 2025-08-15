@@ -61,7 +61,6 @@ CREATE TABLE purchase
     quantity decimal(10,3) NOT NULL,
     description VARCHAR(100),
     unit_price DECIMAL(18, 2) NOT NULL,
-    total_price DECIMAL(18, 2) NOT NULL,
     purchase_order_number VARCHAR(50),
     invoice_number VARCHAR(50),
     received_date TIMESTAMPTZ
