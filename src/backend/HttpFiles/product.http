@@ -1,0 +1,30 @@
+@base_address = http://localhost:5131/api/products
+
+# get
+GET {{base_address}}
+
+### get by id
+GET {{base_address}}/1
+
+### post
+POST {{base_address}}
+Content-Type: application/json
+
+{
+    "productName":"product2",
+    "categoryId":11,
+    "supplierId":2,
+    "price":80
+}
+
+### put
+PUT {{base_address}}
+Content-Type: application/json
+
+{
+    "productName":"product2",
+    "categoryId":11,
+    "supplierId":2,
+    "price":80
+}
+

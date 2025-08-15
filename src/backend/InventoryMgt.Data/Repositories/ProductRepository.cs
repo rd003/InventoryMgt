@@ -4,6 +4,7 @@ using InventoryMgt.Data.Models;
 using InventoryMgt.Data.Models.DTOs;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace InventoryMgt.Data.Repositories;
 
@@ -27,7 +28,7 @@ public class ProductRepository : IProductRepository
     }
     public async Task<ProductDisplay> AddProduct(Product product)
     {
-        using IDbConnection connection = new SqlConnection(_constr);
+        using IDbConnection connection = new NpgsqlConnection(_constr);
         string sql = @"insert into 
                     product (product_name,category_id,supplier_id,price)
                     values(@ProductName,@CategoryId,@SupplierId,@Price) 
@@ -39,29 +40,27 @@ public class ProductRepository : IProductRepository
 
     public async Task<ProductDisplay> UpdatProduct(Product product)
     {
-        using IDbConnection connection = new SqlConnection(_constr);
-        var updatedProduct = await connection.QueryFirstAsync<ProductDisplay>("usp_updateProduct", new
-        {
-            ProductName = product.ProductName,
-            CategoryId = product.CategoryId,
-            Price = product.Price,
-            Id = product.Id
-        },
-        commandType: CommandType.StoredProcedure
-        );
+        using IDbConnection connection = new NpgsqlConnection(_constr);
+        string sql = @"update product 
+                        set product_name=@ProductName,
+                        category_id=@CategoryId,
+                        supplier_id=@SupplierId,
+                        price=@Price
+                       where id=@Id;";
+        var updatedProduct = await connection.QueryFirstAsync<ProductDisplay>(sql, product);
         return updatedProduct;
     }
 
     public async Task DeleteProduct(int id)
     {
-        using IDbConnection connection = new SqlConnection(_constr);
-        string sql = "update Product set IsDeleted=1 where Id=@id";
+        using IDbConnection connection = new NpgsqlConnection(_constr);
+        string sql = "update product set is_deleted=true where id=@id";
         await connection.ExecuteAsync(sql, new { id });
     }
 
     public async Task<ProductDisplay?> GetProduct(int id)
     {
-        using IDbConnection connection = new SqlConnection(_constr);
+        using IDbConnection connection = new NpgsqlConnection(_constr);
         string sql = @"select 
                         p.id,
                         p.product_name,
@@ -71,15 +70,14 @@ public class ProductRepository : IProductRepository
                     from product p 
                     join category c on p.category_id = c.id
                     join supplier s on p.supplier_id = s.id
-                    where p.is_deleted=false and c.is_deleted=false 
-                    where p.id = @Id";
+                    where p.is_deleted=false and c.is_deleted=false and p.id = @Id";
         var product = await connection.QueryFirstOrDefaultAsync<ProductDisplay>(sql, new { id });
         return product;
     }
 
     public async Task<PagedProduct> GetProducts(int page = 1, int limit = 4, string? searchTerm = null, string? sortColumn = null, string? @sortDirection = null)
     {
-        using IDbConnection connection = new SqlConnection(_constr);
+        using IDbConnection connection = new NpgsqlConnection(_constr);
         var result = await connection.QueryMultipleAsync("usp_getProducts", new
         {
             page,
@@ -102,7 +100,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<IEnumerable<ProductWithStock>> GetAllProductsWithStock()
     {
-        using IDbConnection connection = new SqlConnection(_constr);
+        using IDbConnection connection = new NpgsqlConnection(_constr);
         var products = await connection.QueryAsync<ProductWithStock>("usp_GetAllProductsWithStock", commandType: CommandType.StoredProcedure);
         return products;
     }
