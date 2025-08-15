@@ -2,7 +2,6 @@ using System.Data;
 using Dapper;
 using InventoryMgt.Data.Models;
 using InventoryMgt.Data.Models.DTOs;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
@@ -13,7 +12,7 @@ public interface IProductRepository
     Task<ProductDisplay> AddProduct(Product product);
     Task<ProductDisplay> UpdatProduct(Product product);
     Task DeleteProduct(int id);
-    Task<PagedProduct> GetProducts(int page = 1, int limit = 4, string? searchTerm = null, string? sortColumn = null, string? @sortDirection = null);
+    Task<PagedProduct> GetProducts(int page = 1, int limit = 4, string? searchTerm = null, string? sortColumn = null, string? sortDirection = null);
     Task<ProductDisplay?> GetProduct(int id);
     Task<IEnumerable<ProductWithStock>> GetAllProductsWithStock();
 }
@@ -76,27 +75,94 @@ public class ProductRepository : IProductRepository
         return product;
     }
 
-    public async Task<PagedProduct> GetProducts(int page = 1, int limit = 4, string? searchTerm = null, string? sortColumn = null, string? @sortDirection = null)
+    public async Task<PagedProduct> GetProducts(int page = 1, int limit = 4, string? searchTerm = "", string? sortColumn = "id", string? sortDirection = "asc")
     {
-        using IDbConnection connection = new NpgsqlConnection(_constr);
-        var result = await connection.QueryMultipleAsync("usp_getProducts", new
+        var offset = (page - 1) * limit;
+        var searchPattern = string.IsNullOrWhiteSpace(searchTerm) ? null : $"{searchTerm}%";
+
+        var (productQuery, countQuery) = GetQueriesForSort(sortColumn?.ToLower(), sortDirection?.ToLower());
+
+        var parameters = new
         {
-            page,
-            limit,
-            searchTerm,
-            sortColumn,
-            sortDirection
-        }, commandType: CommandType.StoredProcedure);
+            searchTerm = searchPattern,
+            offset,
+            limit
+        };
+
+        using var connection = new NpgsqlConnection(_constr);
+        using var result = await connection.QueryMultipleAsync($"{productQuery}; {countQuery}", parameters);
+
         var products = await result.ReadAsync<ProductDisplay>();
         var productCountResult = await result.ReadFirstAsync<ProductCount>();
+
         return new PagedProduct
         {
             Products = products,
             TotalPages = productCountResult.TotalPages,
             TotalRecords = productCountResult.TotalRecords,
             Page = page,
-            Limit = limit,
+            Limit = limit
         };
+    }
+
+    private static (string productQuery, string countQuery) GetQueriesForSort(string sortColumn, string sortDirection)
+    {
+        var baseProductQuery = @"
+        SELECT 
+        p.id, 
+        p.product_name, 
+        p.price, 
+        p.category_id, 
+        c.category_name,
+        s.supplier_name
+        FROM product p 
+        INNER JOIN  category c ON p.category_id = c.id
+        INNER JOIN  supplier s on p.supplier_id = s.id
+        WHERE p.is_deleted = false 
+        AND c.is_deleted = false
+        AND s.is_deleted = false
+        AND (@SearchTerm IS NULL 
+        OR p.product_name ILIKE @SearchTerm 
+        OR c.category_name ILIKE @SearchTerm
+        OR s.supplier_name ILIKE @SearchTerm
+        )";
+
+        var baseCountQuery = @"
+        SELECT COUNT(p.id) as total_records,
+               CAST(CEILING(COUNT(p.id)::decimal / @limit) AS int) as total_pages
+        FROM product p 
+        INNER JOIN  category c ON p.category_id = c.id
+        INNER JOIN  supplier s on p.supplier_id = s.id
+        WHERE p.is_deleted = false 
+          AND c.is_deleted = false
+          AND s.is_deleted = false
+          AND (@SearchTerm IS NULL 
+        OR p.product_name ILIKE @SearchTerm 
+        OR c.category_name ILIKE @SearchTerm
+        OR s.supplier_name ILIKE @SearchTerm
+        )";
+
+        var orderBy = (sortColumn, sortDirection) switch
+        {
+            ("id", "desc") => "ORDER BY p.id DESC",
+            ("product_name", "asc") => "ORDER BY p.product_name ASC",
+            ("product_name", "desc") => "ORDER BY p.product_name DESC",
+            ("price", "asc") => "ORDER BY p.price ASC",
+            ("price", "desc") => "ORDER BY p.price DESC",
+            ("create_date", "asc") => "ORDER BY p.create_date ASC",
+            ("create_date", "desc") => "ORDER BY p.create_date DESC",
+            ("update_date", "asc") => "ORDER BY p.update_date ASC",
+            ("update_date", "desc") => "ORDER BY p.update_date DESC",
+            ("category_name", "asc") => "ORDER BY c.category_name ASC",
+            ("category_name", "desc") => "ORDER BY c.category_name DESC",
+            ("supplier_name", "asc") => "ORDER BY c.supplier_name ASC",
+            ("supplier_name", "desc") => "ORDER BY c.supplier_name DESC",
+            _ => "ORDER BY p.id ASC" // default
+        };
+
+        var productQuery = $"{baseProductQuery} {orderBy} OFFSET @offset LIMIT @limit";
+
+        return (productQuery, baseCountQuery);
     }
 
     public async Task<IEnumerable<ProductWithStock>> GetAllProductsWithStock()
