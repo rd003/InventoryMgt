@@ -1,7 +1,10 @@
 using InventoryMgt.Api.Extensions;  // This line must be included
 using InventoryMgt.Api.Middlewares;
+using InventoryMgt.Data.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
+
+DapperUtil.ConfigureDapper();
 
 // Add services to the container.
 builder.Services.RegisterServices(); // <--- updated line

@@ -8,7 +8,6 @@ public static class ServiceRegistratonExtension
     public static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         services.AddControllers();
-        services.AddEndpointsApiExplorer();
         services.AddTransient<ICategoryRepository, CategoryRepository>();
         services.AddTransient<IProductRepository, ProductRepository>();
         services.AddTransient<IPurchaseRepository, PurchaseRepository>();
