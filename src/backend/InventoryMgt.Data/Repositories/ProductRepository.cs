@@ -20,8 +20,8 @@ public class ProductRepository : IProductRepository
     {
         using IDbConnection connection = new NpgsqlConnection(_constr);
         string sql = @"insert into 
-                    product (product_name,category_id,supplier_id,price)
-                    values(@ProductName,@CategoryId,@SupplierId,@Price) 
+                    product (product_name,sku,category_id,supplier_id,price)
+                    values(@ProductName,@Sku,@CategoryId,@SupplierId,@Price) 
                     returning id;";
         int createdProductId = await connection.ExecuteScalarAsync<int>(sql, product);
         ProductDisplay? createdProduct = await GetProduct(createdProductId);
@@ -33,6 +33,7 @@ public class ProductRepository : IProductRepository
         using IDbConnection connection = new NpgsqlConnection(_constr);
         string sql = @"update product 
                         set product_name=@ProductName,
+                        sku=@Sku,
                         category_id=@CategoryId,
                         supplier_id=@SupplierId,
                         price=@Price
@@ -56,6 +57,7 @@ public class ProductRepository : IProductRepository
                         p.id,
                         p.product_name,
                         p.price,
+                        p.sku,
                         s.supplier_name,
                         c.category_name 
                     from product p 
@@ -103,6 +105,7 @@ public class ProductRepository : IProductRepository
         p.id, 
         p.product_name, 
         p.price, 
+        p.sku,
         p.category_id, 
         c.category_name,
         s.supplier_name
@@ -164,7 +167,8 @@ public class ProductRepository : IProductRepository
                         p.product_name, 
                         c.category_name,
                         p.price,
-                    coalesce(s.Quantity,0) as quantity 
+                        p.sku,
+                        coalesce(s.Quantity,0) as quantity 
                     from product p
                     join category c on p.category_id=c.id
                     left join stock s on p.id = s.product_id

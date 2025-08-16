@@ -1,17 +1,18 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace InventoryMgt.Data.Models;
 
 public class Product
 {
     public int Id { get; set; }
-    [NotNull, MaxLength(50)]
+    [Required, MaxLength(50)]
     public string? ProductName { get; set; }
-    [NotNull]
+    [Required]
     public int CategoryId { get; set; }
-    [NotNull]
+    [Required]
     public int SupplierId { get; set; }
-    [NotNull]
-    public double Price { get; set; }
+    [Required]
+    public decimal Price { get; set; }
+    [Required, MaxLength(100)]
+    public string Sku { get; set; } = string.Empty;
 }

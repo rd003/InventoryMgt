@@ -31,6 +31,7 @@ public class PurchaseReadDto
     public DateTime PurchaseDate { get; set; }
     public string? Description { get; set; }
     public double Price { get; set; }
+    public string Sku { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;
 }
 

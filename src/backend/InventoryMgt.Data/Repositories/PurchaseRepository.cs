@@ -45,7 +45,21 @@ public class PurchaseRepository : IPurchaseRepository
             await transaction.CommitAsync();
 
             // Return created purchase with product info
-            var result = await connection.QuerySingleAsync<Purchase>(@"
+            var result = await GetPurchase(purchaseId);
+
+            return result!;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task<Purchase?> GetPurchase(int purchaseId)
+    {
+        using IDbConnection connection = new NpgsqlConnection(_connectionString);
+        var purchase = await connection.QuerySingleAsync<Purchase>(@"
             SELECT p.id, 
                 p.create_date, 
                 p.update_date, 
@@ -58,27 +72,14 @@ public class PurchaseRepository : IPurchaseRepository
                 p.purchase_order_number,
 				p.invoice_number,
 				p.received_date,
-                pr.product_name
+                pr.product_name,
+                pr.sku
             FROM purchase p 
             INNER JOIN product pr ON p.product_id = pr.id
             WHERE p.id = @purchaseId 
               AND p.is_deleted = false 
               AND pr.is_deleted = false",
                 new { purchaseId });
-
-            return result;
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
-
-    public async Task<Purchase?> GetPurchase(int id)
-    {
-        using IDbConnection connection = new NpgsqlConnection(_connectionString);
-        var purchase = await connection.QueryFirstOrDefaultAsync<Purchase>("usp_GetPurchaseById", new { Id = id }, commandType: CommandType.StoredProcedure);
         return purchase;
     }
 

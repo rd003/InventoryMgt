@@ -8,29 +8,31 @@ GET {{base_address}}
 GET {{base_address}}?searchTerm=product21
 
 ### get by id
-GET {{base_address}}/3
+GET {{base_address}}/7
 
 ### post
 POST {{base_address}}
 Content-Type: application/json
 
 {
-    "productName":"product2",
-    "categoryId":11,
+    "productName":"product 1",
+    "sku":"product1un",
+    "categoryId":21,
     "supplierId":2,
-    "price":80
+    "price":120
 }
 
 ### put
-PUT {{base_address}}/3
+PUT {{base_address}}/7
 Content-Type: application/json
 
 {
-    "id":3,
-    "productName":"product21",
-    "categoryId":16,
-    "supplierId":1,
-    "price":81
+    "id":7,
+    "productName":"product 11",
+    "sku":"product11un",
+    "categoryId":21,
+    "supplierId":2,
+    "price":120
 }
 
 ### put

@@ -45,6 +45,7 @@ CREATE TABLE product
     product_name VARCHAR(50) NOT NULL,
     category_id INT NOT NULL REFERENCES category(id),
     price DECIMAL(18, 2) NOT NULL,
+    sku varchar(100) not null unique,
     supplier_id INT REFERENCES supplier(id)
 );
 
