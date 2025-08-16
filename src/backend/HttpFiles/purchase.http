@@ -8,9 +8,23 @@ POST  {{base_address}}
 Content-Type: application/json
 
 {
-  "productId": 123,
-  "quantity": 50.5,
-  "purchaseDate": "2025-08-15T10:30",
-  "description": "Bulk purchase",
-  "price": 99.99
+  "productId": 6,
+  "quantity": 90.1,
+  "purchaseDate": "2025-08-16",
+  "unitPrice": 80.99,
+  "description": "Bulk purchase"
+}
+
+### PUT
+
+PUT {{base_address}}/4
+Content-Type: application/json
+
+{
+  "id":4,
+  "productId": 6,
+  "quantity": 90.2,
+  "purchaseDate": "2025-08-14",
+  "unitPrice": 81.99,
+  "description": "Bulk purchase dd"
 }

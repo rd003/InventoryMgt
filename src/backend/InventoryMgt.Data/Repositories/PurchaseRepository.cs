@@ -30,7 +30,7 @@ public class PurchaseRepository : IPurchaseRepository
             // Insert purchase and get ID
             var purchaseId = await connection.ExecuteScalarAsync<int>(@"
             INSERT INTO purchase (product_id, purchase_date, quantity, unit_price, description,purchase_order_number,invoice_number,received_date)
-            VALUES (@productId, @purchaseDate, @quantity, @price, @description,@PurchaseOrderNumber,@InvoiceNumber,@ReceivedDate)
+            VALUES (@ProductId, @PurchaseDate, @Quantity, @UnitPrice, @Description,@PurchaseOrderNumber,@InvoiceNumber,@ReceivedDate)
             RETURNING id",
               purchase, transaction);
 
