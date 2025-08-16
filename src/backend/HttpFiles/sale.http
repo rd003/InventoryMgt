@@ -4,7 +4,7 @@
 GET {{base_address}}
 
 ### Get by id
-GET {{base_address}}/1
+GET {{base_address}}/4
 
 ### post
 POST {{base_address}}
@@ -17,3 +17,19 @@ Content-Type: application/json
   "sellingDate": "2025-08-15",
   "description": "Sale transaction ...."
 }
+
+### put
+PUT {{base_address}}/4
+Content-Type: application/json
+
+{
+  "id":4,
+  "productId": 7,
+  "quantity": 5,
+  "price": 29.90,
+  "sellingDate": "2025-08-16",
+  "description": "Sale transaction ...."
+}
+
+### DELETE
+DELETE {{base_address}}/4

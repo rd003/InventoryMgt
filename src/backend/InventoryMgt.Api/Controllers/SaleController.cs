@@ -5,6 +5,7 @@ using InventoryMgt.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryMgt.Api.Controllers;
+
 [ApiController]
 [Route("api/sales")]
 public class SaleController(ISaleRepository saleRepository, IStockRepository stockRepository) : ControllerBase
@@ -30,7 +31,7 @@ public class SaleController(ISaleRepository saleRepository, IStockRepository sto
         return Ok(response.Sales);
     }
 
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetSaleById(int id)
     {
         var sale = await _saleRepo.GetSale(id);
