@@ -3,6 +3,9 @@
 // get all
 GET {{base_address}}
 
+### get one
+GET {{base_address}}/3
+
 ### post
 POST  {{base_address}}
 Content-Type: application/json
@@ -17,14 +20,14 @@ Content-Type: application/json
 
 ### PUT
 
-PUT {{base_address}}/4
+PUT {{base_address}}/3
 Content-Type: application/json
 
 {
-  "id":4,
+  "id":3,
+  "purchaseDate": "2025-08-16",
   "productId": 6,
-  "quantity": 90.2,
-  "purchaseDate": "2025-08-14",
-  "unitPrice": 81.99,
-  "description": "Bulk purchase dd"
+  "quantity": 10,
+  "unitPrice": 81.22,
+  "description": "Bulk purchase"
 }

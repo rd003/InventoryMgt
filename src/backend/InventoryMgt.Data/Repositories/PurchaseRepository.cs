@@ -56,10 +56,109 @@ public class PurchaseRepository : IPurchaseRepository
         }
     }
 
+    public async Task<Purchase> UpdatePurchase(Purchase purchase)
+    {
+        using var connection = new NpgsqlConnection(_connectionString);
+        await connection.OpenAsync();
+        var transaction = await connection.BeginTransactionAsync();
+
+        try
+        {
+            var (previousProductId, previousQuantity) = await connection.QueryFirstAsync<(int, decimal)>(@"select product_id, quantity from Purchase where id=@Id", new { purchase.Id }, transaction);
+
+            string updateSql = @"update  purchase 
+                                set update_date=now(),
+                                product_id=@ProductId,
+                                purchase_date=@PurchaseDate,
+                                quantity=@quantity,
+                                unit_price=@UnitPrice,
+                                description=@Description
+                                where id=@Id";
+            await connection.ExecuteAsync(updateSql, purchase, transaction);
+
+            // Update stock
+
+            if (previousProductId == purchase.ProductId)
+            {
+                // Same product: adjust the difference in quantity
+                await connection.ExecuteAsync(@"
+                update stock 
+                set quantity = quantity - @PreviousQuantity + @NewQuantity 
+                where product_id = @ProductId",
+                    new
+                    {
+                        PreviousQuantity = previousQuantity,
+                        NewQuantity = purchase.Quantity,
+                        purchase.ProductId
+                    }, transaction);
+            }
+            // if product is different
+            else
+            {
+                // decrease the stock of prev product
+                // increase the stock of new product if exists otherwise create new entry
+
+                // Different product: decrease previous product quantity
+                await connection.ExecuteAsync(@"
+                update stock 
+                set quantity = quantity - @PreviousQuantity 
+                where product_id = @PreviousProductId",
+                    new
+                    {
+                        PreviousQuantity = previousQuantity,
+                        PreviousProductId = previousProductId
+                    }, transaction);
+
+                // Check if new product exists in stock
+                var stockExists = await connection.ExecuteScalarAsync<int?>(@"
+                select 1 from stock where product_id = @ProductId",
+                    new { purchase.ProductId }, transaction);
+
+                if (stockExists.HasValue)
+                {
+                    // Update existing stock
+                    await connection.ExecuteAsync(@"
+                    update stock 
+                    set quantity = quantity + @Quantity 
+                    where product_id = @ProductId",
+                        new
+                        {
+                            purchase.Quantity,
+                            purchase.ProductId
+                        }, transaction);
+                }
+                else
+                {
+                    // Insert new stock record
+                    await connection.ExecuteAsync(@"
+                    insert into stock (product_id, quantity) 
+                    values (@ProductId, @Quantity)",
+                        new
+                        {
+                            purchase.ProductId,
+                            purchase.Quantity
+                        }, transaction);
+                }
+            }
+
+            await transaction.CommitAsync();
+
+            // return updated purchase entry
+            var updatedPurchase = await GetPurchase(purchase.Id);
+            return updatedPurchase!;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+
+    }
+
     public async Task<Purchase?> GetPurchase(int purchaseId)
     {
         using IDbConnection connection = new NpgsqlConnection(_connectionString);
-        var purchase = await connection.QuerySingleAsync<Purchase>(@"
+        var purchase = await connection.QuerySingleOrDefaultAsync<Purchase>(@"
             SELECT p.id, 
                 p.create_date, 
                 p.update_date, 
@@ -113,18 +212,5 @@ public class PurchaseRepository : IPurchaseRepository
         }, commandType: CommandType.StoredProcedure);
     }
 
-    public async Task<Purchase> UpdatePurchase(Purchase purchase)
-    {
-        using IDbConnection connection = new NpgsqlConnection(_connectionString);
-        Purchase updatedPurchase = await connection.QuerySingleAsync<Purchase>("usp_UpdatePurchase", new
-        {
-            purchase.Id,
-            purchase.PurchaseDate,
-            purchase.ProductId,
-            purchase.Description,
-            purchase.Quantity,
-            purchase.UnitPrice
-        }, commandType: CommandType.StoredProcedure);
-        return updatedPurchase;
-    }
+
 }
