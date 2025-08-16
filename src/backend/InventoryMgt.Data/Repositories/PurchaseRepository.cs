@@ -155,14 +155,53 @@ public class PurchaseRepository : IPurchaseRepository
 
     }
 
+    public async Task RemovePurchase(int purchaseId)
+    {
+        using var connection = new NpgsqlConnection(_connectionString);
+        await connection.OpenAsync();
+        var transaction = await connection.BeginTransactionAsync();
+        try
+        {
+            // extracting productId and quantity of before deleting the entry
+            var (existingProductId, existingQuantity) = await connection.QueryFirstAsync<(int, decimal)>(@"select product_id, quantity from purchase where id=@purchaseId", new { purchaseId }, transaction);
+
+            // Check if we have enough stock to decrease
+            var currentStock = await connection.ExecuteScalarAsync<decimal?>(
+                @"select quantity from stock where product_id=@existingProductId",
+                new { existingProductId }, transaction);
+
+            if (!currentStock.HasValue)
+            {
+                throw new InvalidOperationException($"Stock record not found for product {existingProductId}");
+            }
+            if (currentStock.Value < existingQuantity)
+            {
+                throw new InvalidOperationException($"Insufficient stock. Current: {currentStock.Value}, Required: {existingQuantity}");
+            }
+
+            // Soft delete the purchase entry and decrease the stock
+            await connection.ExecuteAsync(@"
+                                update purchase set is_deleted=true, update_date=now() where id=@purchaseId;
+                                
+                                update stock set quantity=quantity-@existingQuantity where product_id=@existingProductId;
+    ", new { purchaseId, existingProductId, existingQuantity }, transaction);
+
+            await transaction.CommitAsync();
+
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+
     public async Task<Purchase?> GetPurchase(int purchaseId)
     {
         using IDbConnection connection = new NpgsqlConnection(_connectionString);
         var purchase = await connection.QuerySingleOrDefaultAsync<Purchase>(@"
-            SELECT p.id, 
-                p.create_date, 
-                p.update_date, 
-                p.is_deleted,
+            SELECT p.id,
                 p.product_id, 
                 p.purchase_date, 
                 p.quantity, 
@@ -185,32 +224,91 @@ public class PurchaseRepository : IPurchaseRepository
     public async Task<PaginatedPurchase> GetPurchases(int page = 1, int limit = 4, string? productName = null, DateTime? dateFrom = null, DateTime? dateTo = null, string? sortColumn = null, string? sortDirection = null)
     {
         using IDbConnection connection = new NpgsqlConnection(_connectionString);
-        var param = new
+
+        // Set default sort parameters
+        sortColumn = string.IsNullOrWhiteSpace(sortColumn) ? "id" : sortColumn.ToLower();
+        sortDirection = string.IsNullOrWhiteSpace(sortDirection) ? "asc" : sortDirection.ToLower();
+
+        // Build the WHERE clause conditions
+        var whereConditions = new List<string>();
+        var parameters = new DynamicParameters();
+
+        // Base conditions
+        whereConditions.Add("p.is_deleted = false AND pr.is_deleted = false");
+
+        // Add date filters if provided
+        if (dateFrom.HasValue && dateTo.HasValue)
         {
-            page,
-            limit,
-            productName,
-            dateFrom,
-            dateTo,
-            sortColumn,
-            sortDirection
-        };
-        var multipleResult = await connection.QueryMultipleAsync("usp_getPurchases", param, commandType: CommandType.StoredProcedure);
-        var purchases = multipleResult.Read<PurchaseReadDto>();
-        var paginationData = multipleResult.ReadFirst<PaginationBase>();
+            whereConditions.Add("p.purchase_date >= @dateFrom AND p.purchase_date <= @dateTo");
+            parameters.Add("@dateFrom", dateFrom.Value);
+            parameters.Add("@dateTo", dateTo.Value);
+        }
+
+        // Add product name filter if provided
+        if (!string.IsNullOrWhiteSpace(productName))
+        {
+            whereConditions.Add("pr.product_name ILIKE @productName");
+            parameters.Add("@productName", $"%{productName}%");
+        }
+
+        // Build ORDER BY clause
+        var validSortColumns = new Dictionary<string, string>
+    {
+        { "id", "p.id" },
+        { "productname", "pr.product_name" },
+        { "price", "p.price" },
+        { "purchasedate", "p.purchase_date" }
+    };
+
+        var orderByColumn = validSortColumns.ContainsKey(sortColumn) ? validSortColumns[sortColumn] : "p.id";
+        var orderByDirection = sortDirection == "desc" ? "DESC" : "ASC";
+
+        // Add pagination parameters
+        parameters.Add("@limit", limit);
+        parameters.Add("@offset", (page - 1) * limit);
+
+        var whereClause = string.Join(" AND ", whereConditions);
+
+        // Main query for purchases
+        var purchaseQuery = $@"SELECT 
+                p.id,
+                p.product_id, 
+                p.purchase_date, 
+                p.quantity, 
+                p.unit_price, 
+                p.description,
+                p.purchase_order_number,
+				p.invoice_number,
+				p.received_date,
+                pr.product_name,
+                pr.sku
+        FROM purchase p
+        INNER JOIN product pr ON p.product_id = pr.id
+        WHERE {whereClause}
+        ORDER BY {orderByColumn} {orderByDirection}
+        LIMIT @limit OFFSET @offset";
+
+        // Count query for pagination
+        var countQuery = $@"
+        SELECT 
+            COUNT(p.id) as total_records,
+            CAST(CEILING((COUNT(p.id)::decimal) / @limit) AS INTEGER) as total_pages
+        FROM purchase p
+        INNER JOIN product pr ON p.product_id = pr.id
+        WHERE {whereClause}";
+
+        // Execute both queries
+        var purchases = await connection.QueryAsync<PurchaseReadDto>(purchaseQuery, parameters);
+        var paginationData = await connection.QueryFirstAsync<PaginationBase>(countQuery, parameters);
+
         paginationData.Page = page;
         paginationData.Limit = limit;
-        return new PaginatedPurchase { Purchases = purchases, Pagination = paginationData };
-    }
 
-    public async Task RemovePurchase(int id)
-    {
-        using IDbConnection connection = new NpgsqlConnection(_connectionString);
-        await connection.ExecuteAsync("usp_DeletePurchase", new
+        return new PaginatedPurchase
         {
-            Id = id
-        }, commandType: CommandType.StoredProcedure);
+            Purchases = purchases,
+            Pagination = paginationData
+        };
     }
-
 
 }

@@ -11,23 +11,31 @@ POST  {{base_address}}
 Content-Type: application/json
 
 {
-  "productId": 6,
-  "quantity": 90.1,
-  "purchaseDate": "2025-08-16",
-  "unitPrice": 80.99,
-  "description": "Bulk purchase"
-}
+  "productId": 7,
+  "quantity": 5,
+  "purchaseDate": "2025-08-10",
+  "unitPrice": 20.99,
+  "description": "Bulk purchase",
+  "purchaseOrderNumber": "ssdd1",
+  "invoiceNumber": "Inv221",
+  "receivedDate": "2025-08-12"
+  }
 
 ### PUT
-
-PUT {{base_address}}/3
+PUT {{base_address}}/5
 Content-Type: application/json
 
 {
-  "id":3,
-  "purchaseDate": "2025-08-16",
-  "productId": 6,
-  "quantity": 10,
-  "unitPrice": 81.22,
-  "description": "Bulk purchase"
+  "id":5,
+  "productId": 7,
+  "quantity": 15,
+  "purchaseDate": "2025-08-10",
+  "unitPrice": 20.99,
+  "description": "Bulk purchase",
+  "purchaseOrderNumber": "ssdd1",
+  "invoiceNumber": "Inv221",
+  "receivedDate": "2025-08-12"
 }
+
+### delete
+DELETE  {{base_address}}/3

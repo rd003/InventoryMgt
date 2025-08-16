@@ -30,8 +30,11 @@ public class PurchaseReadDto
     public double Quantity { get; set; }
     public DateTime PurchaseDate { get; set; }
     public string? Description { get; set; }
-    public double Price { get; set; }
     public string Sku { get; set; } = string.Empty;
+    public double UnitPrice { get; set; }
+    public string? PurchaseOrderNumber { get; set; }
+    public string? InvoiceNumber { get; set; }
+    public DateTime? ReceivedDate { get; set; }
     public string ProductName { get; set; } = string.Empty;
 }
 
