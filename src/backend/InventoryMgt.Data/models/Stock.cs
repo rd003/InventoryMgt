@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace InventoryMgt.Data.Models;
-public class Stock : BaseSchema
+
+public class Stock
 {
-    [NotNull]
+    public int Id { get; set; }
+    [Required]
     public int ProductId { get; set; }
-    [NotNull, MinLength(0)]
-    public double Quantity { get; set; }
+    [Required]
+    public decimal Quantity { get; set; }
 }

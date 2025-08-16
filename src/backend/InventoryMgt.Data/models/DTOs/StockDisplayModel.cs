@@ -2,14 +2,17 @@ namespace InventoryMgt.Data.Models.DTOs;
 
 using InventoryMgt.Data.Models;
 
-public class StockDisplayModel : Stock
+public class StockDisplayModel
 {
-    public string? CategoryName { get; set; }
-    public string? ProductName { get; set; }
+    public int Id { get; set; }
+    public int ProductId { get; set; }
+    public decimal Quantity { get; set; }
+    public string CategoryName { get; set; } = string.Empty;
+    public string ProductName { get; set; } = string.Empty;
 }
 
 public class PaginatedStock
 {
-    public IEnumerable<StockDisplayModel> Stocks { get; set; }
-    public PaginationBase Pagination { get; set; }
+    public IEnumerable<StockDisplayModel> Stocks { get; set; } = [];
+    public PaginationBase Pagination { get; set; } = null!;
 }

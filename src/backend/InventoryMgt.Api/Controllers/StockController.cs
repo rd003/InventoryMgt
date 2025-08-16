@@ -1,9 +1,11 @@
 using System.Text.Json;
 using InventoryMgt.Api.CustomExceptions;
 using InventoryMgt.Data.Models.DTOs;
+using InventoryMgt.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryMgt.Api.Controllers;
+
 [ApiController]
 [Route("/api/stocks")]
 public class StockController : ControllerBase

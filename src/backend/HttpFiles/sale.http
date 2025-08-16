@@ -1,0 +1,19 @@
+@base_address = http://localhost:5131/api/sales
+
+### Get
+GET {{base_address}}
+
+### Get by id
+GET {{base_address}}/1
+
+### post
+POST {{base_address}}
+Content-Type: application/json
+
+{
+  "productId": 7,
+  "quantity": 10,
+  "price": 29.99,
+  "sellingDate": "2025-08-15",
+  "description": "Sale transaction ...."
+}
