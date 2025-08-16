@@ -15,19 +15,22 @@ public class StockController : ControllerBase
     {
         _stockRepo = stockRepo;
     }
+
     [HttpGet]
-    public async Task<IActionResult> GetStocks(int page = 1, int limit = 4, string sortColumn = "Id", string sortDirection = "asc", string? searchTerm = null)
+    [HttpGet]
+    public async Task<IActionResult> GetStocks(int page = 1, int limit = 4, string sortColumn = "id", string sortDirection = "asc", string? searchTerm = null)
     {
-        if (sortDirection != null && !new[] { "asc", "desc" }.Contains(sortDirection))
+        if (sortDirection != null && !new[] { "asc", "desc" }.Contains(sortDirection.ToLower()))
         {
             throw new BadRequestException("'sortDirection' accepts values 'asc' and 'desc' only");
         }
 
-        var allowedSortColumns = new[] { "Id", "ProductName", "CategoryName" };
-        if (sortColumn != null && !allowedSortColumns.Contains(sortColumn))
+        var allowedSortColumns = new[] { "id", "productname", "categoryname", "quantity" };
+        if (sortColumn != null && !allowedSortColumns.Contains(sortColumn.ToLower()))
         {
-            throw new BadRequestException($"only {string.Join(',', allowedSortColumns)} columns allowed");
+            throw new BadRequestException($"Only {string.Join(", ", allowedSortColumns)} columns allowed");
         }
+
         PaginatedStock paginatedStock = await _stockRepo.GetStocks(page, limit, sortColumn, sortDirection, searchTerm);
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginatedStock.Pagination));
         return Ok(paginatedStock.Stocks);

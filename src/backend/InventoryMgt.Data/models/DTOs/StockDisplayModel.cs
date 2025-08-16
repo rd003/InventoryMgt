@@ -9,6 +9,7 @@ public class StockDisplayModel
     public decimal Quantity { get; set; }
     public string CategoryName { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;
+    public string Sku { get; set; } = string.Empty;
 }
 
 public class PaginatedStock
