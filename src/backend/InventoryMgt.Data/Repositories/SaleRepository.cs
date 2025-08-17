@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using InventoryMgt.Data.Models;
+using InventoryMgt.Data.models.DTOs;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
@@ -18,7 +18,7 @@ public class SaleRepository : ISaleRepository
         _connectionString = _config.GetConnectionString("default");
     }
 
-    public async Task<SaleReadDto> AddSale(Sale sale)
+    public async Task<SaleReadDto> AddSale(SaleDto sale)
     {
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync();
@@ -60,7 +60,7 @@ public class SaleRepository : ISaleRepository
 
         return createdSale!;
     }
-    public async Task<SaleReadDto> UpdateSale(Sale sale)
+    public async Task<SaleReadDto> UpdateSale(SaleDto sale)
     {
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync();

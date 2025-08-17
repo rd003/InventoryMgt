@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using InventoryMgt.Data.Models;
+using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Models.DTOs;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
@@ -16,7 +16,7 @@ public class CategoryRepository : ICategoryRepository
         _config = config;
         _connectionString = _config.GetConnectionString("default");
     }
-    public async Task<CategoryReadDto> AddCategory(Category category)
+    public async Task<CategoryReadDto> AddCategory(CategoryDto category)
     {
         using IDbConnection connection = new NpgsqlConnection(_connectionString);
 
@@ -97,7 +97,7 @@ public class CategoryRepository : ICategoryRepository
         return await connection.QueryFirstOrDefaultAsync<CategoryReadDto>(sql, new { Id = id });
     }
 
-    public async Task<CategoryReadDto> UpdateCategory(Category category)
+    public async Task<CategoryReadDto> UpdateCategory(CategoryDto category)
     {
         // category.UpdateDate = DateTime.UtcNow;
         using IDbConnection connection = new NpgsqlConnection(_connectionString);

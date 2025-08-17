@@ -1,3 +1,5 @@
+using InventoryMgt.Data.models.DTOs;
+
 namespace InventoryMgt.Data.Models.DTOs;
 public class PagedProduct : PaginationBase
 {

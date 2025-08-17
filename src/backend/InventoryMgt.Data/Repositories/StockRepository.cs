@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using InventoryMgt.Data.Models;
+using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Models.DTOs;
 using Microsoft.Extensions.Configuration;
 using Npgsql;

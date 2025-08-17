@@ -1,46 +1,43 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace InventoryMgt.Data.Models;
+namespace InventoryMgt.Data.models;
 
-public class Supplier
+public  class Supplier
 {
     public int Id { get; set; }
 
-    [Required]
-    [MaxLength(100)]
+    public DateTime? CreateDate { get; set; }
+
+    public DateTime? UpdateDate { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
     public string SupplierName { get; set; } = null!;
 
-    [MaxLength(100)]
     public string? ContactPerson { get; set; }
 
-    [EmailAddress]
-    [MaxLength(100)]
     public string? Email { get; set; }
 
-    [Phone]
-    [MaxLength(20)]
     public string? Phone { get; set; }
 
-    [MaxLength(300)]
     public string? Address { get; set; }
 
-    [MaxLength(50)]
     public string? City { get; set; }
 
-    [MaxLength(50)]
     public string? State { get; set; }
 
-    [MaxLength(50)]
     public string? Country { get; set; }
 
-    [MaxLength(20)]
     public string? PostalCode { get; set; }
 
-    [MaxLength(50)]
     public string? TaxNumber { get; set; }
 
-    [Range(0, int.MaxValue)]
-    public int PaymentTerms { get; set; } = 30;
+    public int? PaymentTerms { get; set; }
 
-    public bool IsActive { get; set; }
+    public bool? IsActive { get; set; }
+
+    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+
+    public virtual ICollection<Purchase> Purchases { get; set; } = new List<Purchase>();
 }

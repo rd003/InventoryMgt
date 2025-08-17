@@ -1,6 +1,6 @@
 using System.Text.Json;
 using InventoryMgt.Api.CustomExceptions;
-using InventoryMgt.Data.Models;
+using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,14 +17,14 @@ public class PurchaseController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePurchase(Purchase purchase)
+    public async Task<IActionResult> CreatePurchase(PurchaseDto purchase)
     {
         var createdPurchaseRecord = await _purchaseRepository.AddPurchase(purchase);
         return CreatedAtAction(nameof(CreatePurchase), createdPurchaseRecord);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdatePurchase(int id, [FromBody] Purchase purchase)
+    public async Task<IActionResult> UpdatePurchase(int id, [FromBody] PurchaseDto purchase)
     {
         if (id != purchase.Id)
             throw new BadRequestException("id in uri and body does not match");

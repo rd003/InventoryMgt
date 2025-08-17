@@ -1,6 +1,6 @@
 using System.Data;
 using Dapper;
-using InventoryMgt.Data.Models;
+using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Models.DTOs;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
@@ -16,7 +16,7 @@ public class ProductRepository : IProductRepository
         _config = config;
         _constr = _config.GetConnectionString("default");
     }
-    public async Task<ProductDisplay> AddProduct(Product product)
+    public async Task<ProductDisplay> AddProduct(ProductDto product)
     {
         using IDbConnection connection = new NpgsqlConnection(_constr);
         string sql = @"insert into 
@@ -28,7 +28,7 @@ public class ProductRepository : IProductRepository
         return createdProduct!; // I am sure, it won't be null
     }
 
-    public async Task<ProductDisplay> UpdatProduct(Product product)
+    public async Task<ProductDisplay> UpdatProduct(ProductDto product)
     {
         using IDbConnection connection = new NpgsqlConnection(_constr);
         string sql = @"update product 

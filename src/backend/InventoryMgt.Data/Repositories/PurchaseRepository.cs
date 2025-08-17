@@ -1,8 +1,8 @@
 using System.Data;
 using Dapper;
-using InventoryMgt.Data.Models;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
+using InventoryMgt.Data.models.DTOs;
 
 namespace InventoryMgt.Data.Repositories;
 
@@ -15,7 +15,7 @@ public class PurchaseRepository : IPurchaseRepository
         _configuration = configuration;
         _connectionString = _configuration.GetConnectionString("default") ?? "";
     }
-    public async Task<Purchase> AddPurchase(Purchase purchase)
+    public async Task<PurchaseDto> AddPurchase(PurchaseDto purchase)
     {
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync();
@@ -56,7 +56,7 @@ public class PurchaseRepository : IPurchaseRepository
         }
     }
 
-    public async Task<Purchase> UpdatePurchase(Purchase purchase)
+    public async Task<PurchaseDto> UpdatePurchase(PurchaseDto purchase)
     {
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync();
@@ -197,10 +197,10 @@ public class PurchaseRepository : IPurchaseRepository
     }
 
 
-    public async Task<Purchase?> GetPurchase(int purchaseId)
+    public async Task<PurchaseDto?> GetPurchase(int purchaseId)
     {
         using IDbConnection connection = new NpgsqlConnection(_connectionString);
-        var purchase = await connection.QuerySingleOrDefaultAsync<Purchase>(@"
+        var purchase = await connection.QuerySingleOrDefaultAsync<PurchaseDto>(@"
             SELECT p.id,
                 p.product_id, 
                 p.purchase_date, 

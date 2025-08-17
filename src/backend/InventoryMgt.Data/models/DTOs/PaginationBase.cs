@@ -1,4 +1,4 @@
-namespace InventoryMgt.Data.Models;
+namespace InventoryMgt.Data.models.DTOs;
 public class PaginationBase
 {
     public int TotalPages { get; set; }

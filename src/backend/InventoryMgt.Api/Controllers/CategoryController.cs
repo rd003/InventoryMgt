@@ -1,5 +1,5 @@
 using InventoryMgt.Api.CustomExceptions;
-using InventoryMgt.Data.Models;
+using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,14 +15,14 @@ public class CategoryController : ControllerBase
         _categoryRepository = categoryRepository;
     }
     [HttpPost]
-    public async Task<IActionResult> CreateCategory(Category category)
+    public async Task<IActionResult> CreateCategory(CategoryDto category)
     {
         var createdCategory = await _categoryRepository.AddCategory(category);
         return CreatedAtAction(nameof(CreateCategory), createdCategory);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateCategory(int id, [FromBody] Category categoryToUpdate)
+    public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto categoryToUpdate)
     {
         if (id != categoryToUpdate.Id)
             throw new BadRequestException("You are passing an invalid id");

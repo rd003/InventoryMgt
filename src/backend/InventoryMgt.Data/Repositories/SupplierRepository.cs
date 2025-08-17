@@ -1,5 +1,5 @@
 using Dapper;
-using InventoryMgt.Data.Models;
+using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Models.DTOs;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
@@ -17,7 +17,7 @@ public class SupplierRepository : ISupplierRepository
         _constr = _config.GetConnectionString("default") ?? throw new InvalidOperationException("Config 'default' not found");
     }
 
-    public async Task<SupplierReadDto> AddSupplierAsync(Supplier supplier)
+    public async Task<SupplierReadDto> AddSupplierAsync(SupplierDto supplier)
     {
         using var connection = new NpgsqlConnection(_constr);
         string sql = @"
@@ -47,7 +47,7 @@ public class SupplierRepository : ISupplierRepository
         };
     }
 
-    public async Task UpdateSupplierAsync(Supplier supplier)
+    public async Task UpdateSupplierAsync(SupplierDto supplier)
     {
         using var connection = new NpgsqlConnection(_constr);
         const string sql = @"
