@@ -41,3 +41,6 @@ Content-Type: application/json
   "taxNumber": "TAX-544456789",
   "paymentTerms": 40
 }
+
+###
+DELETE {{base_address}}/5
