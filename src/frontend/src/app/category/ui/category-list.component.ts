@@ -9,15 +9,13 @@ import { MatTableModule } from "@angular/material/table";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { CategoryModel } from "../category.model";
-import { DatePipe } from "@angular/common";
-import { Product } from "../../products/product.model";
 
 @Component({
-    selector: "app-category-list",
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MatTableModule, MatButtonModule, MatIconModule, DatePipe],
-    styles: [``],
-    template: `
+  selector: "app-category-list",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatTableModule, MatButtonModule, MatIconModule],
+  styles: [``],
+  template: `
     <table
       style=" margin-top: 1.5rem;"
       mat-table
@@ -32,11 +30,11 @@ import { Product } from "../../products/product.model";
       <ng-container matColumnDef="parentCategory">
         <th mat-header-cell *matHeaderCellDef>Parent Category</th>
         <td mat-cell *matCellDef="let element">
-          {{ element.parentCategoryName }}
+          {{ element.parentCategoryName??"None" }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="createDate">
+      <!-- <ng-container matColumnDef="createDate">
         <th mat-header-cell *matHeaderCellDef>Create Date</th>
         <td mat-cell *matCellDef="let element">
           {{ element.createDate | date : "dd-MMM-yyy HH:MM" }}
@@ -48,7 +46,7 @@ import { Product } from "../../products/product.model";
         <td mat-cell *matCellDef="let element">
           {{ element.updateDate | date : "dd-MMM-yyy HH:MM" }}
         </td>
-      </ng-container>
+      </ng-container> -->
 
       <ng-container matColumnDef="action">
         <th mat-header-cell *matHeaderCellDef>Action</th>
@@ -88,8 +86,6 @@ export class CategoryListComponent {
   displayedColumns: string[] = [
     "categoryName",
     "parentCategory",
-    "createDate",
-    "updateDate",
     "action",
   ];
 }

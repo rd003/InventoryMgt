@@ -16,8 +16,8 @@ POST {{base_address}}
 Content-Type: application/json
 
 {
-    "categoryName":"child cat 1",
-    "categoryId": 21
+    "categoryName":"category1",
+    "categoryId": null
 }
 
 ###

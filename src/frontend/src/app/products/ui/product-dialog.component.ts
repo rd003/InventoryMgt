@@ -22,6 +22,7 @@ import { MatInputModule } from "@angular/material/input";
 import { Product } from "../product.model";
 import { CategoryModel } from "../../category/category.model";
 import { MatSelectModule } from "@angular/material/select";
+import { SupplierModel } from "../../suppliers/supplier.model";
 
 @Component({
   selector: "app-product-dialog",
@@ -47,6 +48,11 @@ import { MatSelectModule } from "@angular/material/select";
         </mat-form-field>
 
         <mat-form-field [appearance]="'outline'">
+          <mat-label>SKU</mat-label>
+          <input matInput formControlName="sku" />
+        </mat-form-field>
+
+        <mat-form-field [appearance]="'outline'">
           <mat-label>Category</mat-label>
           <mat-select formControlName="categoryId">
             <!-- <mat-option [value]="null">None</mat-option> -->
@@ -58,6 +64,17 @@ import { MatSelectModule } from "@angular/material/select";
           </mat-select>
         </mat-form-field>
 
+         <mat-form-field [appearance]="'outline'">
+          <mat-label>Supplier</mat-label>
+          <mat-select formControlName="supplierId">
+            @for(supplier of data.suppliers; track supplier.id)
+            {
+              <mat-option [value]="supplier.id">
+                {{supplier.supplierName}}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
         <mat-form-field [appearance]="'outline'">
           <mat-label>Price</mat-label>
           <input matInput type="number" formControlName="price" />
@@ -109,6 +126,8 @@ export class ProductDialogComponent {
     id: new FormControl<number>(0),
     productName: new FormControl<string>("", Validators.required),
     categoryId: new FormControl<number | null>(null, Validators.required),
+    sku: new FormControl<string>("", Validators.required),
+    supplierId: new FormControl<number>(0, Validators.required),
     price: new FormControl<number>(0, Validators.required),
   });
 
@@ -130,6 +149,7 @@ export class ProductDialogComponent {
       product: Product | null;
       title: string;
       categories: CategoryModel[];
+      suppliers: readonly SupplierModel[];
     }
   ) {
     if (data.product != null) {
