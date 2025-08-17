@@ -1,11 +1,21 @@
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Collections.Generic;
 
-namespace InventoryMgt.Data.Models;
-public class Stock : BaseSchema
+namespace InventoryMgt.Data.models;
+
+public  class Stock
 {
-    [NotNull]
-    public int ProductId { get; set; }
-    [NotNull, MinLength(0)]
-    public double Quantity { get; set; }
+    public int Id { get; set; }
+
+    public DateTime CreateDate { get; set; }
+
+    public DateTime UpdateDate { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
+    public int? ProductId { get; set; }
+
+    public decimal Quantity { get; set; }
+
+    public virtual Product? Product { get; set; }
 }

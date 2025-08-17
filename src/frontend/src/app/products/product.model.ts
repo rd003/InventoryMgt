@@ -9,6 +9,7 @@ export interface Product {
   price: number;
   createDate?: string;
   updateDate?: string;
+  sku: string,
   isDeleted?: boolean;
   categoryName?: string;
 }

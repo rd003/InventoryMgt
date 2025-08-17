@@ -1,0 +1,5 @@
+@base_address = http://localhost:5131/api/stocks
+
+# get all
+GET {{base_address}}
+

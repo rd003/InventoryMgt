@@ -1,10 +1,11 @@
 using System.Text.Json;
 using InventoryMgt.Api.CustomExceptions;
-using InventoryMgt.Data.Models;
+using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryMgt.Api.Controllers;
+
 [ApiController]
 [Route("api/sales")]
 public class SaleController(ISaleRepository saleRepository, IStockRepository stockRepository) : ControllerBase
@@ -30,7 +31,7 @@ public class SaleController(ISaleRepository saleRepository, IStockRepository sto
         return Ok(response.Sales);
     }
 
-    [HttpGet("id")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetSaleById(int id)
     {
         var sale = await _saleRepo.GetSale(id);
@@ -40,7 +41,7 @@ public class SaleController(ISaleRepository saleRepository, IStockRepository sto
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateSale(Sale sale)
+    public async Task<IActionResult> CreateSale(SaleDto sale)
     {
         var stock = await _stockRepo.GetStockByProductId(sale.ProductId);
         if (stock == null)
@@ -52,7 +53,7 @@ public class SaleController(ISaleRepository saleRepository, IStockRepository sto
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateSale(int id, [FromBody] Sale sale)
+    public async Task<IActionResult> UpdateSale(int id, [FromBody] SaleDto sale)
     {
         if (sale.Id != id)
             throw new BadHttpRequestException("id in url and body does not match");

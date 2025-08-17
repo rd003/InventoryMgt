@@ -19,6 +19,8 @@ import { ProductDialogComponent } from "./ui/product-dialog.component";
 import { CategoryModel } from "../category/category.model";
 import { MatButtonModule } from "@angular/material/button";
 import { capitalize } from "../utils/init-cap.util";
+import { SupplierModel } from "../suppliers/supplier.model";
+import { SupplierStore } from "../suppliers/supplier.store";
 
 @Component({
   selector: "app-product",
@@ -81,8 +83,10 @@ import { capitalize } from "../utils/init-cap.util";
 export class ProductComponent implements OnDestroy {
   productStore = inject(ProductStore);
   categoryStore = inject(CategoryStore);
+  supplierStore = inject(SupplierStore);
   dialog = inject(MatDialog);
   destroyed$ = new Subject<boolean>();
+
   vm$ = this.productStore.vm$;
 
   onPageSelect(pageData: { page: number; limit: number }) {
@@ -103,6 +107,8 @@ export class ProductComponent implements OnDestroy {
 
   onAddUpdate(action: string, product: Product | null = null) {
     let categories: CategoryModel[] = [];
+    let suppliers: readonly SupplierModel[] = this.supplierStore.suppliers();
+
     this.categoryStore.vm$
       .pipe(
         takeUntil(this.destroyed$),
@@ -111,8 +117,10 @@ export class ProductComponent implements OnDestroy {
         })
       )
       .subscribe();
+
+
     const dialogRef = this.dialog.open(ProductDialogComponent, {
-      data: { product, title: action + " Book", categories },
+      data: { product, title: action + " Book", categories, suppliers },
     });
 
     dialogRef.componentInstance.sumbit

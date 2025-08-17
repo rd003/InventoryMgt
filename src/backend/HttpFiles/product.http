@@ -1,0 +1,42 @@
+@base_address = http://localhost:5131/api/products
+
+# get
+GET {{base_address}}
+
+### get with params
+# params : page = 1,  limit = 4,  searchTerm = "string"|null, string? sortColumn = "string"|null, string? sortDirection = "string"|null
+GET {{base_address}}?searchTerm=product21
+
+### get by id
+GET {{base_address}}/7
+
+### post
+POST {{base_address}}
+Content-Type: application/json
+
+{
+    "productName":"product 1",
+    "sku":"product1un",
+    "categoryId":21,
+    "supplierId":2,
+    "price":120
+}
+
+### put
+PUT {{base_address}}/7
+Content-Type: application/json
+
+{
+    "id":7,
+    "productName":"product 11",
+    "sku":"product11un",
+    "categoryId":21,
+    "supplierId":2,
+    "price":120
+}
+
+### put
+DELETE  {{base_address}}/3
+
+### Products with stock
+GET {{base_address}}/all-products-with-stock

@@ -1,0 +1,34 @@
+@base_address = http://localhost:5131/api/categories
+
+// get all
+GET {{base_address}}
+
+### get all with optional parameters
+GET {{base_address}}?searchTerm=gg
+
+### Get by id
+
+GET {{base_address}}/20
+
+
+###
+POST {{base_address}}
+Content-Type: application/json
+
+{
+    "categoryName":"category1",
+    "categoryId": null
+}
+
+###
+PUT {{base_address}}/20
+Content-Type: application/json
+
+{
+    "id":20,
+    "categoryName":"child19_112",
+    "categoryId": 19
+}
+
+###
+DELETE {{base_address}}/20

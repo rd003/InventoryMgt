@@ -1,0 +1,41 @@
+@base_address = http://localhost:5131/api/purchases
+
+// get all
+GET {{base_address}}
+
+### get one
+GET {{base_address}}/3
+
+### post
+POST  {{base_address}}
+Content-Type: application/json
+
+{
+  "productId": 7,
+  "quantity": 5,
+  "purchaseDate": "2025-08-10",
+  "unitPrice": 20.99,
+  "description": "Bulk purchase",
+  "purchaseOrderNumber": "ssdd1",
+  "invoiceNumber": "Inv221",
+  "receivedDate": "2025-08-12"
+  }
+
+### PUT
+PUT {{base_address}}/5
+Content-Type: application/json
+
+{
+  "id":5,
+  "productId": 7,
+  "quantity": 15,
+  "purchaseDate": "2025-08-10",
+  "unitPrice": 20.99,
+  "description": "Bulk purchase",
+  "purchaseOrderNumber": "ssdd1",
+  "invoiceNumber": "Inv221",
+  "receivedDate": "2025-08-12"
+}
+
+### delete
+DELETE  {{base_address}}/3

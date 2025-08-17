@@ -21,7 +21,7 @@ const initialState = {
   searchTerm: "",
 };
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CategoryStore
   extends ComponentStore<CategoryState>
   implements OnStoreInit, OnStateInit {

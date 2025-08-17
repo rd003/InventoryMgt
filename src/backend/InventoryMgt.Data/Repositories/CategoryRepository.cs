@@ -1,19 +1,12 @@
 using System.Data;
 using Dapper;
-using InventoryMgt.Data.Models;
-using Microsoft.Data.SqlClient;
+using InventoryMgt.Data.models.DTOs;
+using InventoryMgt.Data.Models.DTOs;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace InventoryMgt.Data.Repositories;
 
-public interface ICategoryRepository
-{
-    Task<Category> AddCategory(Category category);
-    Task<Category> UpdateCategory(Category category);
-    Task DeleteCategory(int id);
-    Task<Category?> GetCategory(int id);
-    Task<IEnumerable<Category>> GetCategories(string searchTerm = "");
-}
 public class CategoryRepository : ICategoryRepository
 {
     private readonly string? _connectionString;
@@ -23,22 +16,42 @@ public class CategoryRepository : ICategoryRepository
         _config = config;
         _connectionString = _config.GetConnectionString("default");
     }
-    public async Task<Category> AddCategory(Category category)
+    public async Task<CategoryReadDto> AddCategory(CategoryDto category)
     {
-        using IDbConnection connection = new SqlConnection(_connectionString);
+        using IDbConnection connection = new NpgsqlConnection(_connectionString);
 
-        var createdCategory = await connection.QueryFirstAsync<Category>("usp_AddCategory", new
+        // Single query approach
+        // string sql = @"insert into category(category_name, category_id)
+        //             values (@CategoryName, @CategoryId);
+
+        //             select 
+        //                 c.id,
+        //                 c.category_id,
+        //                 c.category_name,
+        //                 parent.category_name as parent_category_name
+        //             from category c
+        //             left join category parent on c.category_id = parent.id
+        //             where c.id = lastval();";
+
+        // I am chosing the round trip, because I am using the same select query in 3 places. Later, I found it a maintainence over head so I am chosing roundtrip approach.
+
+        string sql = @"insert into category(category_name, category_id)
+                    values (@CategoryName, @CategoryId) 
+                    returning id";
+        var createdCategoryId = await connection.ExecuteScalarAsync<int>(sql, new
         {
-            CategoryName = category.CategoryName,
-            CategoryId = category.CategoryId
-        }, commandType: CommandType.StoredProcedure);
-        return createdCategory;
+            category.CategoryName,
+            category.CategoryId
+        });
+
+        var createdCategory = await GetCategory(createdCategoryId);
+        return createdCategory!; // I am positive, it won't return null
     }
 
     public async Task DeleteCategory(int id)
     {
-        using IDbConnection connection = new SqlConnection(_connectionString);
-        string sql = "update Category set IsDeleted=@IsDeleted where Id=@Id";
+        using IDbConnection connection = new NpgsqlConnection(_connectionString);
+        string sql = "update Category set is_deleted=@IsDeleted where id=@Id";
         await connection.ExecuteAsync(sql, new
         {
             IsDeleted = true,
@@ -46,30 +59,55 @@ public class CategoryRepository : ICategoryRepository
         });
     }
 
-    public async Task<IEnumerable<Category>> GetCategories(string searchTerm = "")
+    public async Task<IEnumerable<CategoryReadDto>> GetCategories(string searchTerm = "")
     {
-        using IDbConnection connection = new SqlConnection(_connectionString);
-        return await connection.QueryAsync<Category>("usp_getCategories", new { searchTerm }, commandType: CommandType.StoredProcedure);
+        using IDbConnection connection = new NpgsqlConnection(_connectionString);
 
-    }
-
-    public async Task<Category?> GetCategory(int id)
-    {
-        using IDbConnection connection = new SqlConnection(_connectionString);
-        string sql = "select * from Category where IsDeleted=0 and Id=@Id";
-        return await connection.QueryFirstOrDefaultAsync<Category>(sql, new { Id = id });
-    }
-
-    public async Task<Category> UpdateCategory(Category category)
-    {
-        category.UpdateDate = DateTime.UtcNow;
-        using IDbConnection connection = new SqlConnection(_connectionString);
-        var updatedCategory = await connection.QueryFirstAsync<Category>("usp_UpdateCategory", new
+        string sql = @"
+                    SELECT 
+                        c.id,
+                        c.category_id,
+                        c.category_name,
+                        parent.category_name AS parent_category_name
+                    FROM category c
+                    LEFT JOIN category parent
+                        ON c.category_id = parent.id
+                    WHERE c.is_deleted = false";
+        if (!string.IsNullOrWhiteSpace(searchTerm))
         {
-            Id = category.Id,
-            CategoryName = category.CategoryName,
-            CategoryId = category.CategoryId
-        });
-        return updatedCategory;
+            searchTerm = searchTerm.ToLower();
+            sql += " AND c.category_name ILIKE @SearchTerm || '%'";
+        }
+        sql += " order by c.category_name";
+        return await connection.QueryAsync<CategoryReadDto>(sql, new { searchTerm });
+
+    }
+
+    public async Task<CategoryReadDto?> GetCategory(int id)
+    {
+        using IDbConnection connection = new NpgsqlConnection(_connectionString);
+        string sql = @"select 
+                        c.id,
+                        c.category_id,
+                        c.category_name,
+                        parent.category_name as parent_category_name
+                    from category c
+                    left join category parent on c.category_id = parent.id
+                    where c.is_deleted=false and c.id=@Id";
+        return await connection.QueryFirstOrDefaultAsync<CategoryReadDto>(sql, new { Id = id });
+    }
+
+    public async Task<CategoryReadDto> UpdateCategory(CategoryDto category)
+    {
+        // category.UpdateDate = DateTime.UtcNow;
+        using IDbConnection connection = new NpgsqlConnection(_connectionString);
+
+        string sql = @"update category
+          set category_name=@CategoryName,
+          category_id=@CategoryId 
+          where id=@Id";
+        await connection.ExecuteAsync(sql, category);
+        var updatedCategory = await GetCategory(category.Id);
+        return updatedCategory!; // I am positive, that it won't be null
     }
 }

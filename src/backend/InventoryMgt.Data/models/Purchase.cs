@@ -1,24 +1,37 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace InventoryMgt.Data.Models;
-public class Purchase : BaseSchema
+namespace InventoryMgt.Data.models;
+
+public  class Purchase
 {
-    [Required]
-    public int ProductId { get; set; }
-    [Required]
-    public double Quantity { get; set; }
-    [Required]
+    public int Id { get; set; }
+
+    public DateTime CreateDate { get; set; }
+
+    public DateTime UpdateDate { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
+    public int? ProductId { get; set; }
+
+    public int? SupplierId { get; set; }
+
     public DateTime PurchaseDate { get; set; }
-    [MaxLength(100)]
+
+    public decimal Quantity { get; set; }
+
     public string? Description { get; set; }
 
-    [Required]
-    public double Price { get; set; }
-    public string? ProductName { get; set; }
-}
+    public decimal UnitPrice { get; set; }
 
-public class PaginatedPurchase
-{
-    public IEnumerable<Purchase> Purchases { get; set; }
-    public PaginationBase Pagination { get; set; }
+    public string? PurchaseOrderNumber { get; set; }
+
+    public string? InvoiceNumber { get; set; }
+
+    public DateTime? ReceivedDate { get; set; }
+
+    public virtual Product? Product { get; set; }
+
+    public virtual Supplier? Supplier { get; set; }
 }
