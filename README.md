@@ -2,18 +2,22 @@
 
 An `inventory management` project with angular and .net core apis.
 
-## When have I started it?
+## When have I started it and feature upgrades?
 
-I have built this project in **early 2024** with `.net 8 ` and `angular 17`. I had created separate github repositories for front-end and backend. Now, I have moved them to a single repository. I am also upgrading them to latest version (as of Aug,2025), I am planning to add few more features like login.
+- I have built this project in **early 2024** with `.net 8 ` and `angular 17`. I had created separate github repositories for front-end and backend. Now, I have moved them to a single repository.
+- I have upgraded them to .NET 9 and Angular 20.
+- I have used `sql server 2022` as a database. I have used `stored procedures` in all the places. I have taken a challange and migrated it to `PostgreSQL` to see how comfortable am I with Postgres without entity framework and what challanges we face during migrations. It was not easy but fun ride.
+- I also have added feautres like `suppliers` and `authentication`.
+- I have added `entity framework core` for future updates and specially for migrations. I use two machines back and forth and **it was hard to maintain both dev databases**. Entity framework migrations helped me with that. Howeverm I haven't used it anywhere yet. May be I will use it authentication feature (yeah, I am working on this feature).
 
 ## Tech Stack
 
-- **Backend:** Asp.net core web api (9.0)
-- **Database:** Microsoft SQL Server
-- **ORM:** Dapper
-- **Frontend:** Angular 20
+- **Backend:** Asp.net core web api (9.0) (upgrade from .net 8)
+- **Database:** Postgres (migrated from sql server)
+- **ORM:** Dapper(Most of the places), EF Core
+- **Frontend:** Angular 20  (upgraded from v18)
 - **UI:** Angular material (UI component library)
-- Ngrx componnent store (state management)
+- `Ngrx componnent store` (state management) and `service with signal` for new features.
 
 ## How to run the project in dev environment
 
