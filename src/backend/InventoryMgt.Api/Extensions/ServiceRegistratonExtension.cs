@@ -13,12 +13,13 @@ public static class ServiceRegistratonExtension
         services.AddTransient<IPurchaseRepository, PurchaseRepository>();
         services.AddTransient<IStockRepository, StockRepository>();
         services.AddTransient<ISaleRepository, SaleRepository>();
+        services.AddTransient<ISupplierRepository, SupplierRepository>();
         services.AddTransient<ExceptionMiddleware>();
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("*").
+                policy.WithOrigins("*").  // Please register specific origin, dont allow it for everyone, I am doing it deliberately.
                 AllowAnyHeader().
                 AllowAnyMethod().WithExposedHeaders("X-Pagination");
             });

@@ -171,14 +171,8 @@ public class SupplierRepository : ISupplierRepository
 
         using var connection = new NpgsqlConnection(_constr);
 
-        // Execute both queries concurrently
-        var suppliersTask = connection.QueryAsync<SupplierReadDto>(mainQuery, parameters);
-        var countTask = connection.QuerySingleAsync<int>(countQuery, parameters);
-
-        await Task.WhenAll(suppliersTask, countTask);
-
-        var suppliers = await suppliersTask;
-        var totalRecords = await countTask;
+        var suppliers = await connection.QueryAsync<SupplierReadDto>(mainQuery, parameters);
+        var totalRecords = await connection.QuerySingleAsync<int>(countQuery, parameters);
 
         // Calculate total pages
         var totalPages = (int)Math.Ceiling((double)totalRecords / limit);

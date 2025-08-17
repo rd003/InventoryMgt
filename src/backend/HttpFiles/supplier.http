@@ -1,0 +1,43 @@
+@base_address = http://localhost:5131/api/suppliers
+
+GET {{base_address}}
+
+### GET one
+GET {{base_address}}/4
+
+### POST
+POST {{base_address}}
+Content-Type: application/json
+
+{
+  "supplierName": "Supplier 2",
+  "contactPerson": "Satyendra Singh",
+  "email": "satyendrasingh@example.com",
+  "phone": "+91-1111-123-456",
+  "address": "312 Some Ave, Suite",
+  "city": "Haridwar",
+  "state": "Uttarakhand",
+  "country": "India",
+  "postalCode": "100021",
+  "taxNumber": "TAX-544456789",
+  "paymentTerms": 40
+}
+
+### PUT
+PUT {{base_address}}/4
+Content-Type: application/json
+
+{
+  "id":4,
+  "supplierName": "Satyendra and sons pvt ltd.",
+  "contactPerson": "Satyendra Singh",
+  "email": "satyendrasingh@example.com",
+  "phone": "+91-1111-123-456",
+  "address": "Somewhere in haridwar",
+  "city": "Haridwar",
+  "state": "Uttarakhand",
+  "country": "India",
+  "postalCode": "100021",
+  "taxNumber": "TAX-544456789",
+  "paymentTerms": 40
+}
