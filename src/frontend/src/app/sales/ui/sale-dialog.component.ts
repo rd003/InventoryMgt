@@ -183,7 +183,7 @@ export class SaleDialogComponent {
     const price = this.saleForm.get("price")?.value;
     const quantity = this.saleForm.get("quantity")?.value;
     if (price && quantity) {
-      const totalPrice = price * quantity;
+      const totalPrice = parseFloat((price * quantity).toFixed(3));
       this.saleForm.get("totalPrice")?.setValue(totalPrice);
     }
   }

@@ -58,6 +58,8 @@ public class ProductRepository : IProductRepository
                         p.product_name,
                         p.price,
                         p.sku,
+                        p.supplier_id,
+                        p.category_id,
                         s.supplier_name,
                         c.category_name 
                     from product p 
@@ -106,6 +108,7 @@ public class ProductRepository : IProductRepository
         p.product_name, 
         p.price, 
         p.sku,
+        p.supplier_id,
         p.category_id, 
         c.category_name,
         s.supplier_name
@@ -165,6 +168,7 @@ public class ProductRepository : IProductRepository
         string sql = @"select 
                         p.id,
                         p.product_name, 
+                        c_category_id,
                         c.category_name,
                         p.price,
                         p.sku,
