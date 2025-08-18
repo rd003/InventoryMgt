@@ -183,7 +183,7 @@ export class SaleDialogComponent {
     const price = this.saleForm.get("price")?.value;
     const quantity = this.saleForm.get("quantity")?.value;
     if (price && quantity) {
-      const totalPrice = price * quantity;
+      const totalPrice = parseFloat((price * quantity).toFixed(3));
       this.saleForm.get("totalPrice")?.setValue(totalPrice);
     }
   }
@@ -218,6 +218,7 @@ export class SaleDialogComponent {
   ) {
     // if data.sale is not null, it means it is a update form. Then we need to set values to form fields.
     if (data.sale) {
+      console.log(data.sale);
       this.saleForm.patchValue(data.sale);
       this._setTotalPrice();
     }

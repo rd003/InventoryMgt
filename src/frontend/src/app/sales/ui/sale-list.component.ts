@@ -1,4 +1,4 @@
-import { DatePipe } from "@angular/common";
+import { DatePipe, DecimalPipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,6 +19,7 @@ import { SaleModel } from "../sale.model";
     MatButtonModule,
     MatIconModule,
     DatePipe,
+    DecimalPipe,
     MatSortModule,
   ],
   template: `
@@ -67,7 +68,7 @@ import { SaleModel } from "../sale.model";
       <ng-container matColumnDef="totalPrice">
         <th mat-header-cell *matHeaderCellDef>TotalPrice</th>
         <td mat-cell *matCellDef="let sale">
-          {{ sale.price * sale.quantity }}
+          {{ sale.price * sale.quantity | number: '1.3-3' }}
         </td>
       </ng-container>
 

@@ -1,4 +1,4 @@
-import { DatePipe } from "@angular/common";
+import { DatePipe, DecimalPipe } from "@angular/common";
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,97 +13,174 @@ import { PurchaseModel } from "../purchase.model";
 import { MatSortModule, Sort } from "@angular/material/sort";
 
 @Component({
-    selector: "app-purchase-list",
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        MatTableModule,
-        MatButtonModule,
-        MatIconModule,
-        DatePipe,
-        MatSortModule,
-    ],
-    styles: [``],
-    template: `
-    <table
-      class="mat-elevation-z8"
-      mat-table
-      style=" margin-top: 1.5rem;"
-      [dataSource]="purchases"
-      matSort
-      (matSortChange)="onSortData($event)"
-    >
-      <ng-container matColumnDef="purchaseDate">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header
-          sortActionDescription="sort by purchase date"
-        >
-          Purchase Date(dd-MM-yyyy)
-        </th>
-        <td mat-cell *matCellDef="let purchase">
-          {{ purchase.purchaseDate | date : "dd-MM-yyyy HH:MM" }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="productName">
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          mat-sort-header
-          sortActionDescription="sort by product"
-        >
-          ProductName
-        </th>
-        <td mat-cell *matCellDef="let purchase">{{ purchase.productName }}</td>
-      </ng-container>
-      <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef>Price</th>
-        <td mat-cell *matCellDef="let purchase">{{ purchase.price }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="quantity">
-        <th mat-header-cell *matHeaderCellDef>Quantity</th>
-        <td mat-cell *matCellDef="let purchase">{{ purchase.quantity }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="totalPrice">
-        <th mat-header-cell *matHeaderCellDef>TotalPrice</th>
-        <td mat-cell *matCellDef="let purchase">
-          {{ purchase.price * purchase.quantity }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let purchase">{{ purchase.description }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>Action</th>
-        <td mat-cell *matCellDef="let purchase">
-          <button
-            mat-mini-fab
-            color="primary"
-            aria-label="Edit"
-            (click)="edit.emit(purchase)"
+  selector: "app-purchase-list",
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    DatePipe,
+    MatSortModule,
+    DecimalPipe
+  ],
+  styles: [`
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+    
+    .purchase-table {
+      margin-top: 1.5rem;
+      min-width: 100%;
+      width: max-content; 
+    }
+    
+    /* Make action column sticky to the right */
+    .mat-column-action {
+      position: sticky;
+      right: 0;
+      background: white;
+      z-index: 1;
+      border-left: 1px solid #e0e0e0;
+      min-width: 120px; /* Ensure enough space for both buttons */
+      width: 120px;
+    }
+    
+    /* Optional: Make first column sticky too for better UX */
+    .mat-column-purchaseDate {
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 1;
+      border-right: 1px solid #e0e0e0;
+    }
+    
+    /* Ensure proper spacing for action buttons */
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    
+    /* Set minimum widths for columns to prevent squishing */
+    .mat-column-productName { min-width: 150px; }
+    .mat-column-description { min-width: 200px; }
+    .mat-column-purchaseOrderNumber { min-width: 120px; }
+    .mat-column-invoiceNumber { min-width: 100px; }
+    .mat-column-unitPrice { min-width: 100px; }
+    .mat-column-quantity { min-width: 80px; }
+    .mat-column-totalPrice { min-width: 120px; }
+    .mat-column-receivedDate { min-width: 150px; }
+    .mat-column-purchaseDate { min-width: 150px; }
+  `],
+  template: `
+    <div class="table-container">
+      <table
+        class="mat-elevation-z8 purchase-table"
+        mat-table
+        [dataSource]="purchases"
+        matSort
+        (matSortChange)="onSortData($event)"
+      >
+        <ng-container matColumnDef="purchaseDate">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            sortActionDescription="sort by purchase date"
           >
-            <mat-icon>edit</mat-icon>
-          </button>
+            Purchase Date(dd-MM-yyyy)
+          </th>
+          <td mat-cell *matCellDef="let purchase">
+            {{ purchase.purchaseDate | date : "dd-MM-yyyy HH:mm" }}
+          </td>
+        </ng-container>
 
-          <button
-            mat-mini-fab
-            color="warn"
-            aria-label="Delete"
-            (click)="delete.emit(purchase)"
+        <ng-container matColumnDef="productName">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            sortActionDescription="sort by product"
           >
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+            ProductName
+          </th>
+          <td mat-cell *matCellDef="let purchase">{{ purchase.productName }}</td>
+        </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+        <ng-container matColumnDef="unitPrice">
+          <th mat-header-cell *matHeaderCellDef>Unit Price</th>
+          <td mat-cell *matCellDef="let purchase">{{ purchase.unitPrice | number:'1.2-2' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>Quantity</th>
+          <td mat-cell *matCellDef="let purchase">{{ purchase.quantity }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalPrice">
+          <th mat-header-cell *matHeaderCellDef>Total Price</th>
+          <td mat-cell *matCellDef="let purchase">
+            {{ purchase.unitPrice * purchase.quantity | number:'1.2-2' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="purchaseOrderNumber">
+          <th mat-header-cell *matHeaderCellDef>Purchase Order No.</th>
+          <td mat-cell *matCellDef="let purchase">
+            {{ purchase.purchaseOrderNumber }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="invoiceNumber">
+          <th mat-header-cell *matHeaderCellDef>Invoice#</th>
+          <td mat-cell *matCellDef="let purchase">
+            {{ purchase.invoiceNumber }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="receivedDate">
+          <th mat-header-cell *matHeaderCellDef>Received Date</th>
+          <td mat-cell *matCellDef="let purchase">
+            {{ purchase.receivedDate | date: "dd-MM-yyyy HH:mm" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let purchase">
+            {{ purchase.description }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let purchase">
+            <div class="action-buttons">
+              <button
+                mat-mini-fab
+                color="primary"
+                aria-label="Edit"
+                (click)="edit.emit(purchase)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                color="warn"
+                aria-label="Delete"
+                (click)="delete.emit(purchase)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
   `
 })
 export class PurchaseListComponent {
@@ -124,9 +201,12 @@ export class PurchaseListComponent {
   displayedColumns = [
     "purchaseDate",
     "productName",
-    "price",
+    "unitPrice",
     "quantity",
     "description",
+    "purchaseOrderNumber",
+    "invoiceNumber",
+    "receivedDate",
     "totalPrice",
     "action",
   ];

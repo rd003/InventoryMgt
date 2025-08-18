@@ -24,27 +24,27 @@ import { PurchaseModel } from "../purchase.model";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { getDateWithoutTimezone } from "../../utils/date-utils";
-import { Observable, Subject, map, tap } from "rxjs";
+import { Observable, map, tap } from "rxjs";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AsyncPipe } from "@angular/common";
 import { ProductWithStock } from "../../products/product-with-stock.model";
 
 @Component({
-    selector: "app-purchase-dialog",
-    imports: [
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSelectModule,
-        MatDialogModule,
-        MatDatepickerModule,
-        MatAutocompleteModule,
-        AsyncPipe,
-    ],
-    providers: [provideNativeDateAdapter()],
-    template: ` <h1 mat-dialog-title>
+  selector: "app-purchase-dialog",
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatDatepickerModule,
+    MatAutocompleteModule,
+    AsyncPipe,
+  ],
+  providers: [provideNativeDateAdapter()],
+  template: ` <h1 mat-dialog-title>
       {{ data.title }}
     </h1>
     <div mat-dialog-content>
@@ -91,8 +91,8 @@ import { ProductWithStock } from "../../products/product-with-stock.model";
         </mat-form-field>
 
         <mat-form-field [appearance]="'outline'">
-          <mat-label>Price</mat-label>
-          <input matInput type="number" formControlName="price" />
+          <mat-label>Unit Price</mat-label>
+          <input matInput type="number" formControlName="unitPrice" />
         </mat-form-field>
 
         <mat-form-field [appearance]="'outline'">
@@ -103,6 +103,32 @@ import { ProductWithStock } from "../../products/product-with-stock.model";
         <mat-form-field [appearance]="'outline'">
           <mat-label>Total</mat-label>
           <input matInput type="number" formControlName="totalPrice" />
+        </mat-form-field>
+
+        <mat-form-field [appearance]="'outline'">
+          <mat-label>Purchase Order No.</mat-label>
+          <input matInput type="text" formControlName="purchaseOrderNumber" />
+        </mat-form-field>
+
+        <mat-form-field [appearance]="'outline'">
+          <mat-label>Invoice No.</mat-label>
+          <input matInput type="text" formControlName="invoiceNumber" />
+        </mat-form-field>
+
+        <mat-form-field [appearance]="'outline'">
+          <mat-label>Received Date</mat-label>
+          <input
+            matInput
+            formControlName="receivedDate"
+            [matDatepicker]="receivedDatePicker"
+          />
+          <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="receivedDatePicker"
+            disabled="false"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #receivedDatePicker disabled="false"></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field [appearance]="'outline'">
@@ -131,8 +157,8 @@ import { ProductWithStock } from "../../products/product-with-stock.model";
         Close
       </button>
     </div>`,
-    styles: [
-        `
+  styles: [
+    `
       .purchase-form {
         padding: 10px;
         display: grid;
@@ -144,8 +170,8 @@ import { ProductWithStock } from "../../products/product-with-stock.model";
         width: 400px;
       }
     `,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PurchaseDialogComponent {
   @Output() sumbit = new EventEmitter<PurchaseModel>();
@@ -155,9 +181,12 @@ export class PurchaseDialogComponent {
     id: new FormControl<number>(0),
     purchaseDate: new FormControl<string | null>("", Validators.required),
     productId: new FormControl<number | null>(null, Validators.required),
-    price: new FormControl<number>(0, Validators.required),
+    unitPrice: new FormControl<number>(0, Validators.required),
     quantity: new FormControl<number>(1, Validators.required),
     description: new FormControl<string>(""),
+    purchaseOrderNumber: new FormControl<string>(""),
+    invoiceNumber: new FormControl<string>(""),
+    receivedDate: new FormControl<string | null>(null),
     totalPrice: new FormControl<number>({ value: 0, disabled: true }),
   });
 
@@ -172,15 +201,15 @@ export class PurchaseDialogComponent {
     return product.productName;
   }
 
-  private _setPrice(price: number) {
-    this.purchaseForm.get("price")?.setValue(price);
+  private _setPrice(unitPrice: number) {
+    this.purchaseForm.get("unitPrice")?.setValue(unitPrice);
   }
 
   private _setTotalPrice() {
     const quantity: number | null = this.purchaseForm.get("quantity")?.value;
-    const price: number | null = this.purchaseForm.get("price")?.value;
-    if (price && quantity) {
-      const totalPrice = price * quantity;
+    const unitPrice: number | null = this.purchaseForm.get("unitPrice")?.value;
+    if (unitPrice && quantity) {
+      const totalPrice: number = parseFloat((unitPrice * quantity).toFixed(3));
       this.purchaseForm.get("totalPrice")?.setValue(totalPrice);
     }
   }
@@ -244,10 +273,10 @@ export class PurchaseDialogComponent {
 
     // on value changes of price
     this.purchaseForm
-      .get("price")
+      .get("unitPrice")
       ?.valueChanges.pipe(
-        tap((price) => {
-          if (price && typeof price === "number") {
+        tap((unitPrice) => {
+          if (unitPrice && typeof unitPrice === "number") {
             this._setTotalPrice();
           }
         }),

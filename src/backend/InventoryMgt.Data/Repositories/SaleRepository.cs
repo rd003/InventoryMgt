@@ -205,6 +205,7 @@ public class SaleRepository : ISaleRepository
         string sql = @"
                     select 
                     s.id,
+                    s.product_id,
                     s.selling_date,
                     s.description,
                     s.price,

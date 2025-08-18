@@ -10,6 +10,7 @@ export interface Product {
   createDate?: string;
   updateDate?: string;
   sku: string,
+  supplierId: number,
   isDeleted?: boolean;
   categoryName?: string;
 }
