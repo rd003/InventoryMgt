@@ -153,7 +153,6 @@ export class ProductDialogComponent {
     }
   ) {
     if (data.product != null) {
-      console.log(data.product)
       this.productForm.patchValue(data.product);
     }
   }

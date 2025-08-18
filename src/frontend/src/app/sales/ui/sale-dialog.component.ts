@@ -218,6 +218,7 @@ export class SaleDialogComponent {
   ) {
     // if data.sale is not null, it means it is a update form. Then we need to set values to form fields.
     if (data.sale) {
+      console.log(data.sale);
       this.saleForm.patchValue(data.sale);
       this._setTotalPrice();
     }
