@@ -6,6 +6,12 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 export interface SupplierState {
     suppliers: readonly SupplierModel[],
+    searchTerm: string | null;
+    sortColumn: string | null;
+    sortDirection: string | null;
+    page: number;
+    limit: number;
+    totalRecords: number;
     loading: boolean,
     error: HttpErrorResponse | null
 }
@@ -17,7 +23,12 @@ export class SupplierStore {
 
     private initialState: SupplierState = {
         suppliers: [],
-        loading: false,
+        searchTerm: null,
+        sortColumn: null,
+        sortDirection: null,
+        page: 1,
+        limit: 4,
+        totalRecords: 0, loading: false,
         error: null
     };
 
@@ -26,6 +37,27 @@ export class SupplierStore {
     suppliers = computed(() => this.store().suppliers);
     loading = computed(() => this.store().loading);
     error = computed(() => this.store().error);
+    searchTerm = computed(() => this.store().searchTerm);
+    sortColumn = computed(() => this.store().sortColumn);
+    sortDirection = computed(() => this.store().sortDirection);
+    page = computed(() => this.store().page);
+    limit = computed(() => this.store().limit);
+
+    addSupplier = (supplier: SupplierModel) => {
+        this.setLoading(true);
+        this.supplierService.addSupplier(supplier).pipe(
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+            next: ((createdSupplier) => {
+                this.store.update((prevState) => ({
+                    ...prevState,
+                    loading: false,
+                    suppliers: [...prevState.suppliers, createdSupplier]
+                }));
+            }),
+            error: (error => this.setError(error))
+        });
+    }
 
     private loadSuppliers = () => {
         this.setLoading(true);
@@ -34,11 +66,11 @@ export class SupplierStore {
         ).subscribe(
             {
                 next: (data) => {
-                    this.store.set({
+                    this.store.update((prevState) => ({
+                        ...prevState,
                         suppliers: data.suppliers,
-                        loading: false,
-                        error: null
-                    })
+                        loading: false
+                    }))
                 },
                 error: (err) => {
                     console.log(err);
