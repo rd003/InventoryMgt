@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace InventoryMgt.Data.models;
 
-public  class Purchase
+public class Purchase
 {
     public int Id { get; set; }
 
@@ -31,7 +31,7 @@ public  class Purchase
 
     public DateTime? ReceivedDate { get; set; }
 
-    public virtual Product? Product { get; set; }
+    public Product? Product { get; set; }
 
-    public virtual Supplier? Supplier { get; set; }
+    public Supplier? Supplier { get; set; }
 }

@@ -7,12 +7,12 @@ export interface PurchaseModel {
   quantity: number;
   purchaseDate: string;
   description: string;
-  price: number;
+  unitPrice: number;
   productName: string;
   id: number;
-  createDate: string;
-  updateDate: string;
-  isDeleted: boolean;
+  purchaseOrderNumber: string;
+  invoiceNumber: string;
+  receivedDate: string
 }
 
 export interface PaginatedPurchase extends PaginationModel {
