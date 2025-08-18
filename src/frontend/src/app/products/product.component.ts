@@ -35,6 +35,7 @@ import { SupplierStore } from "../suppliers/supplier.store";
   providers: [
     provideComponentStore(CategoryStore),
     provideComponentStore(ProductStore),
+    SupplierStore
   ],
   template: `
       <div style="display: flex;align-items:center;gap:5px;margin-bottom:8px">

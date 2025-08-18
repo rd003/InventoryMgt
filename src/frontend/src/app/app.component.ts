@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { FooterComponent } from "./footer.component";
 import { NotificationComponent } from "./shared/notification.component";
-import { SidebarComponent } from "./sidebar.component";
+import { SidebarComponent } from "./sidebar/sidebar.component";
 
 @Component({
   selector: "app-root",

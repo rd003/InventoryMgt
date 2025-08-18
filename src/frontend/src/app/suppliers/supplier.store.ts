@@ -16,7 +16,7 @@ export interface SupplierState {
     error: HttpErrorResponse | null
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable()
 export class SupplierStore {
     private supplierService = inject(SupplierService);
     private destroyRef = inject(DestroyRef);
@@ -59,9 +59,83 @@ export class SupplierStore {
         });
     }
 
-    private loadSuppliers = () => {
+
+    updateSupplier = (supplier: SupplierModel) => {
         this.setLoading(true);
-        this.supplierService.getSuppliers().pipe(
+        this.supplierService.updateSupplier(supplier).pipe(
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+            next: ((_) => {
+                this.store.update((prevState) => ({
+                    ...prevState,
+                    loading: false,
+                    suppliers: prevState.suppliers.map(s => s.id === supplier.id ? supplier : s)
+                }));
+            }),
+            error: (error => this.setError(error))
+        });
+    }
+
+    deleteSupplier = (supplierId: number) => {
+        this.setLoading(true);
+        this.supplierService.deleteSupplier(supplierId).pipe(
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe({
+            next: ((_) => {
+                this.store.update((prevState) => ({
+                    ...prevState,
+                    loading: false,
+                    suppliers: prevState.suppliers.filter(s => s.id !== supplierId)
+                }));
+            }),
+            error: (error => this.setError(error))
+        });
+    }
+
+    private getCurrentState = () => {
+        const currentState = this.store(); // or however you access your current state
+        return {
+            page: currentState.page || 1,
+            limit: currentState.limit || 4,
+            searchTerm: currentState.searchTerm || null,
+            sortColumn: currentState.sortColumn || null,
+            sortDirection: currentState.sortDirection || null
+        };
+    };
+
+    setPage = (page: number) => {
+        const current = this.getCurrentState();
+        this.loadSuppliers(page, current.limit, current.searchTerm, current.sortColumn, current.sortDirection);
+    }
+
+    setLimit = (limit: number) => {
+        const current = this.getCurrentState();
+        this.loadSuppliers(current.page, limit, current.searchTerm, current.sortColumn, current.sortDirection);
+    };
+
+    setSearch = (searchTerm: string) => {
+        const current = this.getCurrentState();
+        // Reset to page 1 when searching (common UX pattern)
+        this.loadSuppliers(1, current.limit, searchTerm, current.sortColumn, current.sortDirection);
+    };
+
+    setSortColumn = (sortColumn: string) => {
+        const current = this.getCurrentState();
+        this.loadSuppliers(current.page, current.limit, current.searchTerm, sortColumn, current.sortDirection);
+    };
+
+    setSortDirection = (sortDirection: string) => {
+        const current = this.getCurrentState();
+        this.loadSuppliers(current.page, current.limit, current.searchTerm, current.sortColumn, sortDirection);
+    };
+
+    private loadSuppliers = (page = 1,
+        limit = 4,
+        searchTerm: string | null = null,
+        sortColumn: string | null = null,
+        sortDirection: string | null = null) => {
+        this.setLoading(true);
+        this.supplierService.getSuppliers(page, limit, searchTerm, sortColumn, sortDirection).pipe(
             takeUntilDestroyed(this.destroyRef)
         ).subscribe(
             {
@@ -69,7 +143,12 @@ export class SupplierStore {
                     this.store.update((prevState) => ({
                         ...prevState,
                         suppliers: data.suppliers,
-                        loading: false
+                        loading: false,
+                        page,
+                        limit,
+                        searchTerm,
+                        sortColumn,
+                        sortDirection,
                     }))
                 },
                 error: (err) => {

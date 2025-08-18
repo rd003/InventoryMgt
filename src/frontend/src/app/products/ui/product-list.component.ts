@@ -72,8 +72,6 @@ import { MatSortModule, Sort } from "@angular/material/sort";
         <th
           mat-header-cell
           *matHeaderCellDef
-          mat-sort-header
-          sortActionDescription="sort by supplier"
         >
           Supplier
         </th>

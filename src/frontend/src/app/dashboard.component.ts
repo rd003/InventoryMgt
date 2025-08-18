@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-dashboard',
   imports: [],
   template: `
-    <p>
-      home works!
-    </p>
+    <h1>
+      Welcome
+    </h1>
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent {
+export class DashbardComponent {
 
 }
