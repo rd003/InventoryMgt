@@ -1,40 +1,54 @@
 import { Component } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { HeaderComponent } from "./header.component";
 import { FooterComponent } from "./footer.component";
 import { NotificationComponent } from "./shared/notification.component";
+import { SidebarComponent } from "./sidebar.component";
 
 @Component({
-    selector: "app-root",
-    imports: [
-        RouterOutlet,
-        HeaderComponent,
-        FooterComponent,
-        NotificationComponent,
-    ],
-    template: `
-    <app-header />
-    <app-notification />
-    <div class="content-page">
-      <router-outlet />
+  selector: "app-root",
+  imports: [
+    RouterOutlet,
+    SidebarComponent,
+    FooterComponent,
+    NotificationComponent,
+  ],
+  template: `
+    <div class="app-container">
+      <app-sidebar />
+      <div class="main-content">
+        <app-notification />
+        <div class="content-page">
+          <router-outlet />
+        </div>
+        <app-footer />
+      </div>
     </div>
-    <app-footer />
   `,
-    styles: [
-        `
-      :host {
-        height: 100%;
+  styles: [
+    `
+      .app-container {
+        height: 100vh;
         width: 100%;
         display: flex;
-        flex-direction: column;
+        overflow: hidden;
       }
+      
+      .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      
       .content-page {
-        padding: 20px;
-        flex-grow: 1;
+        padding: 24px;
+        flex: 1;
+        overflow-y: auto;
+        background-color: #f8fafc;
       }
     `,
-    ]
+  ]
 })
 export class AppComponent {
-  constructor() {}
+  constructor() { }
 }
