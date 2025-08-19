@@ -2,12 +2,17 @@ import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { SupplierStore } from "./supplier.store";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { SupplierListComponent } from "./ui/supplier-list.component";
+import { SupplierModel } from "./supplier.model";
+import { SupplierFilterComponent } from "./ui/supplier-filter.comonent";
 
 @Component({
     selector: 'app-supplier',
     imports: [
         MatProgressSpinnerModule,
         MatButtonModule,
+        SupplierListComponent,
+        SupplierFilterComponent
     ],
     providers: [SupplierStore],
     template: `
@@ -29,9 +34,9 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
       }
 
      @if(store.suppliers() && store.suppliers().length > 0){
-         @for (supplier of store.suppliers(); track supplier.id) {
-            <p>{{supplier.id}}</p>
-         }
+         <app-supplier-filter (filter)="onFilter($event)"/>
+
+         <app-supplier-list [suppliers]="store.suppliers()" (sort)="onSort($event)" (edit)="onEdit($event)" (delete)="onDelete($event)"/>
      }
      @else {
          <p style="margin-top:20px;font-size:21px">
@@ -44,6 +49,23 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 })
 export class SupplierComponent {
     store = inject(SupplierStore);
+
+    onFilter = (searchTerm: string) => {
+        console.log(searchTerm);
+    }
+
+    onSort = (data: { sortColumn: string; sortDirection: "asc" | "desc" }) => {
+    }
+
+    onEdit = (supplier: SupplierModel) => {
+        console.log(supplier);
+    }
+
+    onDelete = (supplier: SupplierModel) => {
+        if (!confirm('Are you sure to delete supplier ' + supplier.supplierName))
+            return;
+        console.log(supplier);
+    }
 
     onAddUpdate = (title: string) => {
 
