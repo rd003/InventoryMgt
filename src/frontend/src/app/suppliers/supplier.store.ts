@@ -28,7 +28,8 @@ export class SupplierStore {
         sortDirection: null,
         page: 1,
         limit: 4,
-        totalRecords: 0, loading: false,
+        totalRecords: 0,
+        loading: false,
         error: null
     };
 
@@ -42,6 +43,7 @@ export class SupplierStore {
     sortDirection = computed(() => this.store().sortDirection);
     page = computed(() => this.store().page);
     limit = computed(() => this.store().limit);
+    totalRecords = computed(() => this.store().totalRecords);
 
     addSupplier = (supplier: SupplierModel) => {
         this.setLoading(true);
@@ -103,31 +105,22 @@ export class SupplierStore {
         };
     };
 
-    setPage = (page: number) => {
+    setPagination = (pageData: { page: number; limit: number }) => {
         const current = this.getCurrentState();
-        this.loadSuppliers(page, current.limit, current.searchTerm, current.sortColumn, current.sortDirection);
+        this.loadSuppliers(pageData.page, pageData.limit, current.searchTerm, current.sortColumn, current.sortDirection);
     }
-
-    setLimit = (limit: number) => {
-        const current = this.getCurrentState();
-        this.loadSuppliers(current.page, limit, current.searchTerm, current.sortColumn, current.sortDirection);
-    };
 
     setSearch = (searchTerm: string) => {
         const current = this.getCurrentState();
-        // Reset to page 1 when searching (common UX pattern)
+        // Reset to page 1 when searching
         this.loadSuppliers(1, current.limit, searchTerm, current.sortColumn, current.sortDirection);
     };
 
-    setSortColumn = (sortColumn: string) => {
+    setSorting = (data: { sortColumn: string; sortDirection: "asc" | "desc" }) => {
         const current = this.getCurrentState();
-        this.loadSuppliers(current.page, current.limit, current.searchTerm, sortColumn, current.sortDirection);
-    };
+        this.loadSuppliers(current.page, current.limit, current.searchTerm, data.sortColumn, data.sortDirection);
+    }
 
-    setSortDirection = (sortDirection: string) => {
-        const current = this.getCurrentState();
-        this.loadSuppliers(current.page, current.limit, current.searchTerm, current.sortColumn, sortDirection);
-    };
 
     private loadSuppliers = (page = 1,
         limit = 4,
@@ -143,6 +136,7 @@ export class SupplierStore {
                     this.store.update((prevState) => ({
                         ...prevState,
                         suppliers: data.suppliers,
+                        totalRecords: data.TotalRecords,
                         loading: false,
                         page,
                         limit,

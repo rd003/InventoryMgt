@@ -5,6 +5,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { SupplierListComponent } from "./ui/supplier-list.component";
 import { SupplierModel } from "./supplier.model";
 import { SupplierFilterComponent } from "./ui/supplier-filter.comonent";
+import { SupplierPaginatorComponent } from "./ui/supplier-paginator.component";
 
 @Component({
     selector: 'app-supplier',
@@ -12,7 +13,8 @@ import { SupplierFilterComponent } from "./ui/supplier-filter.comonent";
         MatProgressSpinnerModule,
         MatButtonModule,
         SupplierListComponent,
-        SupplierFilterComponent
+        SupplierFilterComponent,
+        SupplierPaginatorComponent
     ],
     providers: [SupplierStore],
     template: `
@@ -32,11 +34,14 @@ import { SupplierFilterComponent } from "./ui/supplier-filter.comonent";
           <mat-spinner diameter="50"></mat-spinner>
         </div>
       }
+      
+    <app-supplier-filter (filter)="onFilter($event)"/>
 
      @if(store.suppliers() && store.suppliers().length > 0){
-         <app-supplier-filter (filter)="onFilter($event)"/>
 
          <app-supplier-list [suppliers]="store.suppliers()" (sort)="onSort($event)" (edit)="onEdit($event)" (delete)="onDelete($event)"/>
+
+         <app-supplier-paginator [totalRecords]="store.totalRecords()" (pageSelect)="onPageSelect($event)"/>
      }
      @else {
          <p style="margin-top:20px;font-size:21px">
@@ -50,12 +55,13 @@ import { SupplierFilterComponent } from "./ui/supplier-filter.comonent";
 export class SupplierComponent {
     store = inject(SupplierStore);
 
-    onFilter = (searchTerm: string) => {
-        console.log(searchTerm);
+    onPageSelect = (pageData: { page: number; limit: number }) => {
+        this.store.setPagination(pageData);
     }
 
-    onSort = (data: { sortColumn: string; sortDirection: "asc" | "desc" }) => {
-    }
+    onFilter = (searchTerm: string) => this.store.setSearch(searchTerm);
+
+    onSort = (sortingData: { sortColumn: string; sortDirection: "asc" | "desc" }) => this.store.setSorting(sortingData);
 
     onEdit = (supplier: SupplierModel) => {
         console.log(supplier);

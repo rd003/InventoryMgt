@@ -65,16 +65,6 @@ public class SupplierController : ControllerBase
     [HttpGet()]
     public async Task<IActionResult> GetSuppliers(int page = 1, int limit = 4, string? searchTerm = null, string? sortColumn = null, string? sortDirection = null)
     {
-        if (sortDirection != null && !new[] { "asc", "desc" }.Contains(sortDirection))
-        {
-            throw new BadRequestException("'sortDirection' accepts values 'asc' and 'desc' only");
-        }
-
-        if (sortColumn != null && !new[] { "supplier_name", "contact_person" }.Contains(sortColumn))
-        {
-            throw new BadRequestException("'sortColumn' accepts values ('supplier_name', 'contact_person') only");
-        }
-
         var supplierResult = await _supplierRepo.GetSuppliersAsnc(page, limit, searchTerm, sortColumn, sortDirection);
         var suppliers = supplierResult.Suppliers;
 
