@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InventoryMgt.Data.Configurations;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryMgt.Data.models;
 
@@ -21,16 +22,11 @@ public class AppDbContext : DbContext
 
     public DbSet<Supplier> Suppliers { get; set; }
 
+    public DbSet<User> Users { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-
-
-        modelBuilder.Entity<Supplier>(entity =>
-        {
-
-        });
-
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductConfiguration).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 

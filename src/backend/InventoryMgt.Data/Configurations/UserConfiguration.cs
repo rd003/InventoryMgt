@@ -30,5 +30,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         .HasColumnName("password_hash")
         .IsRequired()
         .HasMaxLength(200);
+
+        builder.Property(b => b.Role)
+        .HasColumnName("role")
+        .IsRequired()
+        .HasMaxLength(15);
     }
 }

@@ -41,6 +41,32 @@ An `inventory management` project with angular and .net core apis.
 2. Execute the command `npm i` to install all the dependencies.
 3. Execute `ng serve --open` to run and open this project in browser.
 
+## Are you facing problems on migrations?
+
+You might get error while executing them from CLI, because we have multiple projects.
+
+Error might be:
+
+```txt
+```
+
+Visit to the root directory of backend project, which named `backend` in our case. So visit to `backend` directory and execute these commands in a sequece:
+
+Creating migration:
+
+```sh
+dotnet ef migrations add SomeMigration --project InventoryMgt.Data --startup-project InventoryMgt.Api
+```
+
+Note: You need to replace `SomeMigration` to a meaningful name
+
+
+However, this project can apply migration while you run it. But, in case you manually want to run it. Update database: 
+
+```sh
+dotnet ef database update --project InventoryMgt.Data --startup-project InventoryMgt.Api
+```
+
 ## Screenshots
 
 --- 
