@@ -73,13 +73,10 @@ export class SupplierComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((submittedData) => {
                 if (!submittedData) return;
-                console.log(submittedData);
                 if (submittedData.id && submittedData.id > 0) {
-                    // update 
-                    //this.store.updateSupplier(submittedData);
+                    this.store.updateSupplier(submittedData);
                 } else {
-                    // add
-                    // this.store.addSupplier(submittedData);
+                    this.store.addSupplier(submittedData);
                 }
                 dialogRef.componentInstance.supplierForm.reset();
                 dialogRef.componentInstance.onCanceled();
@@ -102,6 +99,6 @@ export class SupplierComponent {
     onDelete = (supplier: SupplierModel) => {
         if (!confirm('Are you sure to delete supplier ' + supplier.supplierName))
             return;
-        console.log(supplier);
+        this.store.deleteSupplier(supplier.id);
     }
 }
