@@ -1,5 +1,6 @@
 import { Injectable, inject } from "@angular/core";
-import { ComponentStore, OnStateInit, OnStoreInit } from '@ngrx/component-store';import { tapResponse } from '@ngrx/operators';
+import { ComponentStore, OnStateInit, OnStoreInit } from '@ngrx/component-store';
+import { tapResponse } from '@ngrx/operators';
 
 import { PaginatedProduct, Product } from "./product.model";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -33,8 +34,7 @@ const initialState: productState = {
 @Injectable()
 export class ProductStore
   extends ComponentStore<productState>
-  implements OnStoreInit, OnStateInit
-{
+  implements OnStoreInit, OnStateInit {
   private readonly productService = inject(ProductService);
 
   private readonly products$ = this.select((a) => a.products);
@@ -148,9 +148,9 @@ export class ProductStore
       switchMap((product) =>
         this.productService.addProduct(product).pipe(
           tapResponse({
-    next: (response) => this.addSingleProductToStore(response),
-    error: (error: HttpErrorResponse) => this.setError(error)
-})
+            next: (response) => this.addSingleProductToStore(response),
+            error: (error: HttpErrorResponse) => this.setError(error)
+          })
         )
       )
     )
@@ -162,9 +162,9 @@ export class ProductStore
       switchMap((product) =>
         this.productService.updateProduct(product).pipe(
           tapResponse({
-    next: (response) => this.updateStoresProduct(response),
-    error: (error: HttpErrorResponse) => this.setError(error)
-})
+            next: (response) => this.updateStoresProduct(response),
+            error: (error: HttpErrorResponse) => this.setError(error)
+          })
         )
       )
     )
@@ -175,9 +175,9 @@ export class ProductStore
       switchMap((id) =>
         this.productService.deleteProduct(id).pipe(
           tapResponse({
-    next: () => this.deleteStoresProduct(id),
-    error: (error: HttpErrorResponse) => this.setError(error)
-})
+            next: () => this.deleteStoresProduct(id),
+            error: (error: HttpErrorResponse) => this.setError(error)
+          })
         )
       )
     )
@@ -200,11 +200,11 @@ export class ProductStore
               .getProducts(page, limit, searchTerm, sortColumn, sortDirection)
               .pipe(
                 tapResponse({
-    next: (response) => {
-        this.loadProductResponse(response);
-    },
-    error: (error: HttpErrorResponse) => this.setError(error)
-})
+                  next: (response) => {
+                    this.loadProductResponse(response);
+                  },
+                  error: (error: HttpErrorResponse) => this.setError(error)
+                })
               )
           )
         );
@@ -221,7 +221,7 @@ export class ProductStore
   ngrxOnStateInit() {
     this.loadProducts();
   }
-  ngrxOnStoreInit() {}
+  ngrxOnStoreInit() { }
 
   private loadProductResponse = (response: PaginatedProduct) => {
     // console.log({

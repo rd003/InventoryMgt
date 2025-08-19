@@ -1,13 +1,22 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { environment } from "../../environments/environment.development";
-import { Observable, of } from "rxjs";
+import { map, Observable, of } from "rxjs";
 import { PaginatedSupplier, SupplierModel } from "./supplier.model";
+import { PaginationModel } from "../shared/models/pagination.model";
 
 @Injectable({ providedIn: 'root' })
 export class SupplierService {
     private readonly _http = inject(HttpClient);
     private _url = environment.API_BASE_URL + "/suppliers";
+
+    addSupplier = (supplier: SupplierModel) => this._http.post<SupplierModel>(this._url, supplier);
+
+    updateSupplier = (supplier: SupplierModel) => this._http.put<void>(`${this._url}/${supplier.id}`, supplier)
+
+    getSupplier = (supplierId: number) => this._http.get<SupplierModel>(`${this._url}/${supplierId}`);
+
+    deleteSupplier = (supplierId: number) => this._http.delete<SupplierModel>(`${this._url}/${supplierId}`);
 
     getSuppliers = (page = 1,
         limit = 4,
@@ -16,31 +25,29 @@ export class SupplierService {
         sortDirection: string | null = null): Observable<PaginatedSupplier> => {
         //this._http.get(this._url);
 
-        const suppliers: SupplierModel[] = [
-            {
-                "id": 1,
-                "supplierName": "Supplier 2",
-                "contactPerson": "Satyendra Singh",
-                "email": "satyendrasingh@example.com",
-                "phone": "+91-1111-123-456",
-                "address": "312 Some Ave, Suite",
-                "city": "Haridwar",
-                "state": "Uttarakhand",
-                "country": "India",
-                "postalCode": "100021",
-                "taxNumber": "TAX-544456789",
-                "paymentTerms": 40,
-                "isActive": true
-            }
-        ];
-        const paginatedSupplier: PaginatedSupplier = {
-            suppliers,
-            Limit: 5,
-            Page: 1,
-            TotalPages: 10,
-            TotalRecords: 50
-        };
-        return of(paginatedSupplier);
+        let parameters = new HttpParams();
+        parameters = parameters.set("page", page);
+        parameters = parameters.set("limit", limit);
+        if (searchTerm)
+            parameters = parameters.set("searchTerm", searchTerm);
+        if (sortColumn)
+            parameters = parameters.set("sortColumn", sortColumn);
+        if (sortDirection)
+            parameters = parameters.set("sortDirection", sortDirection);
+        return this._http.get(this._url, {
+            observe: 'response',
+            params: parameters
+        }).pipe(
+            map((response) => {
+                const paginationHeader = response.headers.get("X-Pagination") as string;  // it is a json string
+                const paginationData: PaginationModel = JSON.parse(paginationHeader);
+                const suppliers = response.body as SupplierModel[];
+                const supplierResponse: PaginatedSupplier = {
+                    ...paginationData, suppliers
+                }
+                return supplierResponse;
+            })
+        );
     }
 
 

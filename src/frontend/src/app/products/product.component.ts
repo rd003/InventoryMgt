@@ -35,6 +35,7 @@ import { SupplierStore } from "../suppliers/supplier.store";
   providers: [
     provideComponentStore(CategoryStore),
     provideComponentStore(ProductStore),
+    SupplierStore
   ],
   template: `
       <div style="display: flex;align-items:center;gap:5px;margin-bottom:8px">
@@ -55,9 +56,9 @@ import { SupplierStore } from "../suppliers/supplier.store";
           <mat-spinner diameter="50"></mat-spinner>
         </div>
       }
+        <app-product-filter (filter)="onSearch($event)" />
       
       @if(vm.products && vm.products.length > 0){
-        <app-product-filter (filter)="onSearch($event)" />
 
         <app-product-list
           [products]="vm.products"

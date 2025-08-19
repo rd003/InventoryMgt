@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'app-sales',
-  standalone: true,
+  selector: 'app-dashboard',
   imports: [],
   template: `
-    <p>
-      sales works!
-    </p>
+    <h1>
+      Welcome
+    </h1>
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SalesComponent {
+export class DashbardComponent {
 
 }

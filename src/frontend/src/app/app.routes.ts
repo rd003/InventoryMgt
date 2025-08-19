@@ -1,38 +1,39 @@
 import { Routes } from "@angular/router";
-import { HomeComponent } from "./home.component";
+import { DashbardComponent } from "./dashboard.component";
 
 export const routes: Routes = [
   {
-    path: "home",
-    component: HomeComponent,
+    path: "dashboard",
+    component: DashbardComponent,
   },
   {
     path: "categories",
-    loadComponent() {
-      return import("./category/category.component").then(
-        (a) => a.CategoryComponent
-      );
+    async loadComponent() {
+      const a = await import("./category/category.component");
+      return a.CategoryComponent;
     },
   },
   {
     path: "products",
-    loadComponent() {
-      return import("./products/product.component").then(
-        (a) => a.ProductComponent
-      );
+    async loadComponent() {
+      const a = await import("./products/product.component");
+      return a.ProductComponent;
     },
   },
   {
     path: "purchases",
-    loadComponent() {
-      return import("./purchase/purchase.component").then(
-        (a) => a.PurchaseComponent
-      );
+    async loadComponent() {
+      const a = await import("./purchase/purchase.component");
+      return a.PurchaseComponent;
     },
   },
   {
+    path: "suppliers",
+    loadComponent: () => import("./suppliers/supplier.component").then(s => s.SupplierComponent)
+  },
+  {
     path: "",
-    redirectTo: "/home",
+    redirectTo: "/dashboard",
     pathMatch: "full",
   },
   {
@@ -47,8 +48,9 @@ export const routes: Routes = [
   },
   {
     path: "**",
-    loadComponent() {
-      return import("./not-found.component").then((a) => a.NotFoundComponent);
+    async loadComponent() {
+      const a = await import("./not-found.component");
+      return a.NotFoundComponent;
     },
   },
 ];

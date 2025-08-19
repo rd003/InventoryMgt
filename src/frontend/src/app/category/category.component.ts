@@ -48,10 +48,11 @@ import { CategoryFilterComponent } from "./ui/category-filter.component";
           (submit)="onSubmit($event)"
           (reset)="onReset()"
         />
+        
+        <app-category-filter (filter)="onFilter($event)" />
         @if(vm.categories && vm.categories.length > 0)
           {
         <h1 style="margin-top:15px">Categories</h1>   
-        <app-category-filter (filter)="onFilter($event)" />
 
         <app-category-list
           [categories]="vm.categories"

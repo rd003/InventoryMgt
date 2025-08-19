@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Dapper;
 using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Models.DTOs;
@@ -109,20 +110,30 @@ public class SupplierRepository : ISupplierRepository
         // Validate parameters
         page = Math.Max(1, page);
         limit = Math.Max(1, Math.Min(100, limit)); // Cap limit at 100
+
         sortDirection = string.IsNullOrEmpty(sortDirection) ? "ASC" : sortDirection.ToUpper();
 
         // Validate sort direction
         if (sortDirection != "ASC" && sortDirection != "DESC")
-            sortDirection = "ASC";
+            throw new InvalidEnumArgumentException("Sort direction should be ");
 
-        // Validate and set default sort column
-        var validColumns = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        var columnMapping = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)  // It performs case-insensitive string comparisons using ordinal comparison (byte-by-byte comparison of Unicode code points).
     {
-        "supplier_name", "contact_person"
+        { "id", "id" },
+        { "supplierName", "supplier_name" },
+        { "contactPerson", "contact_person" },
+        { "supplier_name", "supplier_name" },
+        { "contact_person", "contact_person" }
     };
 
-        if (string.IsNullOrEmpty(sortColumn) || !validColumns.Contains(sortColumn))
-            sortColumn = "supplier_name";
+        if (string.IsNullOrEmpty(sortColumn)) { sortColumn = "id"; }
+
+        if (!columnMapping.ContainsKey(sortColumn))
+        {
+            throw new InvalidEnumArgumentException($"sortColumn value:'{sortColumn}' is not acceptable ");
+        }
+
+        sortColumn = columnMapping[sortColumn];
 
         // Build the WHERE clause for search
         var whereClause = "WHERE is_deleted = false";
