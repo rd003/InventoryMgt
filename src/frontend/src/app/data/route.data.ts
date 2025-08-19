@@ -3,7 +3,7 @@ const NavData = [
         section: 'Main',
         links: [
             {
-                link: '/home',
+                link: '/dashboard',
                 icon: 'dashboard',
                 title: 'Dashboard'
             },

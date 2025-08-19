@@ -56,9 +56,9 @@ import { SupplierStore } from "../suppliers/supplier.store";
           <mat-spinner diameter="50"></mat-spinner>
         </div>
       }
+        <app-product-filter (filter)="onSearch($event)" />
       
       @if(vm.products && vm.products.length > 0){
-        <app-product-filter (filter)="onSearch($event)" />
 
         <app-product-list
           [products]="vm.products"

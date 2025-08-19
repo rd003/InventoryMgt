@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, inject } from "@angular/core";
 import { SupplierStore } from "./supplier.store";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
@@ -6,6 +6,9 @@ import { SupplierListComponent } from "./ui/supplier-list.component";
 import { SupplierModel } from "./supplier.model";
 import { SupplierFilterComponent } from "./ui/supplier-filter.comonent";
 import { SupplierPaginatorComponent } from "./ui/supplier-paginator.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { SupplierDialogComponent } from "./ui/supplier-dialog.component";
 
 @Component({
     selector: 'app-supplier',
@@ -14,7 +17,8 @@ import { SupplierPaginatorComponent } from "./ui/supplier-paginator.component";
         MatButtonModule,
         SupplierListComponent,
         SupplierFilterComponent,
-        SupplierPaginatorComponent
+        SupplierPaginatorComponent,
+        MatDialogModule
     ],
     providers: [SupplierStore],
     template: `
@@ -23,7 +27,7 @@ import { SupplierPaginatorComponent } from "./ui/supplier-paginator.component";
         <button style="margin:10px 0px"
         mat-raised-button
         color="primary"
-        (click)="onAddUpdate('Add Product')"
+        (click)="onAddUpdate('Add Product',null)"
       >
         Add More
       </button>
@@ -39,7 +43,7 @@ import { SupplierPaginatorComponent } from "./ui/supplier-paginator.component";
 
      @if(store.suppliers() && store.suppliers().length > 0){
 
-         <app-supplier-list [suppliers]="store.suppliers()" (sort)="onSort($event)" (edit)="onEdit($event)" (delete)="onDelete($event)"/>
+         <app-supplier-list [suppliers]="store.suppliers()" (sort)="onSort($event)" (edit)="onAddUpdate('Edit purchase', $event)" (delete)="onDelete($event)"/>
 
          <app-supplier-paginator [totalRecords]="store.totalRecords()" (pageSelect)="onPageSelect($event)"/>
      }
@@ -54,6 +58,33 @@ import { SupplierPaginatorComponent } from "./ui/supplier-paginator.component";
 })
 export class SupplierComponent {
     store = inject(SupplierStore);
+    destroyRef = inject(DestroyRef);
+    dialog = inject(MatDialog);
+
+    onAddUpdate(
+        action: string,
+        supplier: SupplierModel | null = null
+    ) {
+        const dialogRef = this.dialog.open(SupplierDialogComponent, {
+            data: { supplier, title: action + " Supplier" },
+        });
+
+        dialogRef.componentInstance.submit
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((submittedData) => {
+                if (!submittedData) return;
+                console.log(submittedData);
+                if (submittedData.id && submittedData.id > 0) {
+                    // update 
+                    //this.store.updateSupplier(submittedData);
+                } else {
+                    // add
+                    // this.store.addSupplier(submittedData);
+                }
+                dialogRef.componentInstance.supplierForm.reset();
+                dialogRef.componentInstance.onCanceled();
+            });
+    }
 
     onPageSelect = (pageData: { page: number; limit: number }) => {
         this.store.setPagination(pageData);
@@ -63,17 +94,14 @@ export class SupplierComponent {
 
     onSort = (sortingData: { sortColumn: string; sortDirection: "asc" | "desc" }) => this.store.setSorting(sortingData);
 
-    onEdit = (supplier: SupplierModel) => {
-        console.log(supplier);
-    }
+    // onEdit = (supplier: SupplierModel) => {
+    //     const suppliers = this.store.suppliers() as readonly SupplierModel[];
+    //     this.onAddUpdate('Edit purchase', supplier, suppliers)
+    // }
 
     onDelete = (supplier: SupplierModel) => {
         if (!confirm('Are you sure to delete supplier ' + supplier.supplierName))
             return;
         console.log(supplier);
-    }
-
-    onAddUpdate = (title: string) => {
-
     }
 }

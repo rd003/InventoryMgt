@@ -54,13 +54,14 @@ import { ProductWithStock } from "../products/product-with-stock.model";
           <mat-spinner diameter="50"></mat-spinner>
         </div>
         }
-       
-        @if(vm.purchases && vm.purchases.length > 0){
-          <app-purchase-filters
+
+        <app-purchase-filters
             (searchProduct)="onSearch($event)"
             (filterByPurchaseDate)="onDateFilter($event)"
             (clearFilter)="onClearFilter()"
           />
+       
+        @if(vm.purchases && vm.purchases.length > 0){
           <app-purchase-list
             [purchases]="vm.purchases"
             (sort)="onSort($event)"

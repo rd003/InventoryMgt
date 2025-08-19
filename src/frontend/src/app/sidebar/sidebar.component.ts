@@ -3,7 +3,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterModule } from "@angular/router";
 import { Nav } from "../shared/models/Nav";
-import NavData from '../data/nav.data';
+import NavData from '../data/route.data';
 
 @Component({
   selector: "app-sidebar",
