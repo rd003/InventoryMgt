@@ -13,6 +13,11 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
     NotificationComponent,
   ],
   template: `
+  @if(!isAuthenticated){
+    <router-outlet />
+  }
+  
+  @else{
     <div class="app-container">
       <app-sidebar />
       <div class="main-content">
@@ -23,6 +28,7 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
         <app-footer />
       </div>
     </div>
+  }
   `,
   styles: [
     `
@@ -50,5 +56,6 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
   ]
 })
 export class AppComponent {
+  isAuthenticated = false;
   constructor() { }
 }

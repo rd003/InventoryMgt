@@ -1,10 +1,14 @@
 import { Routes } from "@angular/router";
-import { DashbardComponent } from "./dashboard.component";
+import { LoginComponent } from "./login/login.component";
 
 export const routes: Routes = [
   {
+    path: "login",
+    component: LoginComponent
+  },
+  {
     path: "dashboard",
-    component: DashbardComponent,
+    loadComponent: () => import("./dashboard.component").then(a => a.DashbardComponent),
   },
   {
     path: "categories",
@@ -33,7 +37,7 @@ export const routes: Routes = [
   },
   {
     path: "",
-    redirectTo: "/dashboard",
+    redirectTo: "/login",
     pathMatch: "full",
   },
   {
