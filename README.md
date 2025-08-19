@@ -1,11 +1,11 @@
-# Inventory management
+# Inventory management (Work in prgress)
 
 An `inventory management` project with angular and .net core apis.
 
 ## When have I started it and feature upgrades?
 
-- I have built this project in **early 2024** with `.net 8 ` and `angular 17`. I had created separate github repositories for front-end and backend. Now, I have moved them to a single repository.
-- I have upgraded them to .NET 9 and Angular 20.
+- I have built this project in **early 2024** with `.net 8 ` and `angular 17`. I had created two separate github repositories for `front-end` and `backend`. Now, I have moved them to a single repository.
+- I have upgraded it to `.NET 9` and `Angular 20`.
 - I have used `sql server 2022` as a database. I have used `stored procedures` in all the places. I have taken a challange and migrated it to `PostgreSQL` to see how comfortable am I with Postgres without entity framework and what challanges we face during migrations. It was not easy but fun ride.
 - I also have added feautres like `suppliers` and `authentication`.
 - I have added `entity framework core` for future updates and specially for migrations. I use two machines back and forth and **it was hard to maintain both dev databases**. Entity framework migrations helped me with that. Howeverm I haven't used it anywhere yet. May be I will use it authentication feature (yeah, I am working on this feature).
@@ -13,15 +13,15 @@ An `inventory management` project with angular and .net core apis.
 ## Tech Stack
 
 - **Backend:** Asp.net core web api (9.0) (upgrade from .net 8)
-- **Database:** Postgres (migrated from sql server)
+- **Database:** Postgres (previously sql server 2022)
 - **ORM:** Dapper(Most of the places), EF Core
 - **Frontend:** Angular 20  (upgraded from v18)
 - **UI:** Angular material (UI component library)
-- `Ngrx componnent store` (state management) and `service with signal` for new features.
+- **State Management:** `Ngrx componnent store` (Almost everywhere) and `service with signal` (For newer features).
 
 ## How to run the project in dev environment
 
-- Make sure to install dotnet 9 sdk,latest node js and angular cli.
+- Make sure you have installed `dotnet 9` sdk,latest node js and angular cli.
 - **Clone this project:** Open terminal and run `git clone https://github.com/rd003/InventroyMgt.git`
 - `cd `
 - With command `code .`, your project will be opened in VS Code.
@@ -30,7 +30,7 @@ An `inventory management` project with angular and .net core apis.
 ### A. Backend
 
 1. To work with this project, you must execute this [script](./database/db.sql) in your sql server database.
-2. Open `appsettings.json` and configure the connection string according to your database. `server= {my_server_name}` to `{your_server_name}`. At this stage, you must know how to configure the connection string.
+2. Open `appsettings.json` and configure the connection string according to your database.
 3. Open `InventoryMgt.Api` in the integrated terminal.
 4. Execute the command `dotnet run`, to run this project.
 5. Keep this application running in that terminal.
