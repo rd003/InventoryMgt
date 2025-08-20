@@ -1,5 +1,5 @@
 using System.Text.Json;
-using InventoryMgt.Api.CustomExceptions;
+using InventoryMgt.Data.CustomExceptions;
 using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;

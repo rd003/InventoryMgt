@@ -1,5 +1,5 @@
 
-using InventoryMgt.Api.CustomExceptions;
+using InventoryMgt.Data.CustomExceptions;
 using InventoryMgt.Api.Models;
 
 namespace InventoryMgt.Api.Middlewares;

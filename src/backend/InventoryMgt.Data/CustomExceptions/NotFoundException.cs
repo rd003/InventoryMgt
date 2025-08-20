@@ -1,4 +1,4 @@
-namespace InventoryMgt.Api.CustomExceptions;
+namespace InventoryMgt.Data.CustomExceptions;
 
 public class NotFoundException : Exception
 {

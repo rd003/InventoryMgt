@@ -1,3 +1,4 @@
+using InventoryMgt.Data.CustomExceptions;
 using InventoryMgt.Data.Mappers;
 using InventoryMgt.Data.models;
 using InventoryMgt.Data.models.DTOs;
@@ -36,12 +37,12 @@ public class AuthRepository : IAuthRepository
 
         if (user is null)
         {
-            throw new InvalidOperationException("Invalid credential");
+            throw new UnauthorizedException("Invalid credential");
         }
 
         if (!BCrypt.Net.BCrypt.Verify(loginData.Password, user.PasswordHash))
         {
-            throw new InvalidOperationException("Invalid credential");
+            throw new UnauthorizedException("Invalid credential");
         }
 
         return user.ToUserReadDto();
