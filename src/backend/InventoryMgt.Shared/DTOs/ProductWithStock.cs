@@ -1,4 +1,4 @@
-namespace InventoryMgt.Data.Models.DTOs;
+namespace InventoryMgt.Shared.DTOs;
 
 public class ProductWithStock
 {

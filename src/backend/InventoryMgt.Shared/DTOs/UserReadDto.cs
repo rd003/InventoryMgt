@@ -1,5 +1,5 @@
 
-namespace InventoryMgt.Data.models.DTOs;
+namespace InventoryMgt.Shared.DTOs;
 
 public class UserReadDto
 {

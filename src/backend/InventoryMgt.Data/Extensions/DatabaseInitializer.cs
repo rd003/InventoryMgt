@@ -1,7 +1,7 @@
 using InventoryMgt.Data.Constants;
-using InventoryMgt.Data.models;
-using InventoryMgt.Data.models.DTOs;
-using InventoryMgt.Data.Repositories;
+using InventoryMgt.Data.Models;
+using InventoryMgt.Shared.DTOs;
+using InventoryMgt.Shared.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

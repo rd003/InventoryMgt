@@ -1,6 +1,6 @@
-using InventoryMgt.Data.models.DTOs;
+using InventoryMgt.Shared.DTOs;
 
-namespace InventoryMgt.Data.Models.DTOs;
+namespace InventoryMgt.Shared.DTOs;
 public class PagedProduct : PaginationBase
 {
     public IEnumerable<ProductDisplay> Products { get; set; }

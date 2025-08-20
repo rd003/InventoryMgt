@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace InventoryMgt.Data.models;
+namespace InventoryMgt.Data.Models;
 
 public class Category
 {

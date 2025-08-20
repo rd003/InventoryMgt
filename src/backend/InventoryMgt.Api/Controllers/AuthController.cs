@@ -1,11 +1,14 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using InventoryMgt.Api.Services;
-using InventoryMgt.Data.CustomExceptions;
-using InventoryMgt.Data.models.DTOs;
-using InventoryMgt.Data.Repositories;
+using InventoryMgt.Data.Mappers;
+using InventoryMgt.Shared.Contracts;
+using InventoryMgt.Shared.CustomExceptions;
+using InventoryMgt.Shared.DTOs;
+using InventoryMgt.Shared.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace InventoryMgt.Api.Controllers
 {
@@ -15,11 +18,13 @@ namespace InventoryMgt.Api.Controllers
     {
         private readonly IAuthRepository _authRepo;
         private readonly ITokenService _tokenService;
+        private readonly ITokenInfoRepository _tokenInfoRepository;
 
-        public AuthController(IAuthRepository authRepo, ITokenService tokenService)
+        public AuthController(IAuthRepository authRepo, ITokenService tokenService, ITokenInfoRepository tokenInfoRepository)
         {
             _authRepo = authRepo;
             _tokenService = tokenService;
+            _tokenInfoRepository = tokenInfoRepository;
         }
 
         [HttpPost("login")]
@@ -37,9 +42,34 @@ namespace InventoryMgt.Api.Controllers
 
             claims.Add(new Claim(ClaimTypes.Role, user.Role));
 
-            // generating access token
-            var token = _tokenService.GenerateAccessToken(claims);
-            return Ok(token);
+            // generating access and refresh token
+            var accessToken = _tokenService.GenerateAccessToken(claims);
+            string refreshToken = _tokenService.GenerateRefreshToken();
+
+            var tokenInfo = await _tokenInfoRepository.GetTokenInfoByUsernameAsync(user.Username);
+
+            if (tokenInfo == null)
+            {
+                var tokenInfoDto = new CreateTokenInfoDto
+                {
+                    Username = user.Username,
+                    RefreshToken = refreshToken,
+                    ExpiredAt = DateTime.UtcNow.AddMinutes(1) // TODO: Change to 7 days
+                };
+                await _tokenInfoRepository.AddTokenInfoAsync(tokenInfoDto);
+            }
+            else
+            {
+                tokenInfo.RefreshToken = refreshToken;
+                tokenInfo.ExpiredAt = DateTime.UtcNow.AddMinutes(1);// TODO: Change to 7 days
+                await _tokenInfoRepository.UpdateTokenInfoAsync(tokenInfo.ToUpdateTokenInfoDto());
+            }
+
+            return Ok(new TokenModel
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            });
         }
 
         [Authorize]

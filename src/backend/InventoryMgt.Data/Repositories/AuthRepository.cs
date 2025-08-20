@@ -1,10 +1,10 @@
-using InventoryMgt.Data.CustomExceptions;
+using InventoryMgt.Shared.CustomExceptions;
 using InventoryMgt.Data.Mappers;
-using InventoryMgt.Data.models;
-using InventoryMgt.Data.models.DTOs;
+using InventoryMgt.Data.Models;
+using InventoryMgt.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
 
-namespace InventoryMgt.Data.Repositories;
+namespace InventoryMgt.Shared.Repositories;
 
 public class AuthRepository : IAuthRepository
 {

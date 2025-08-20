@@ -1,5 +1,5 @@
-using InventoryMgt.Data.models;
-using InventoryMgt.Data.models.DTOs;
+using InventoryMgt.Data.Models;
+using InventoryMgt.Shared.DTOs;
 
 namespace InventoryMgt.Data.Mappers;
 

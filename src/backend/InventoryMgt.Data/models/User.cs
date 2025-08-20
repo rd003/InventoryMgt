@@ -1,4 +1,4 @@
-namespace InventoryMgt.Data.models;
+namespace InventoryMgt.Data.Models;
 
 public class User
 {

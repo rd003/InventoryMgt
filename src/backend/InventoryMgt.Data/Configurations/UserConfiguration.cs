@@ -1,4 +1,4 @@
-using InventoryMgt.Data.models;
+using InventoryMgt.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryMgt.Data.Configurations;

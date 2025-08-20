@@ -1,11 +1,11 @@
 using System.Data;
 using Dapper;
-using InventoryMgt.Data.models.DTOs;
+using InventoryMgt.Shared.DTOs;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-namespace InventoryMgt.Data.Repositories;
+namespace InventoryMgt.Shared.Repositories;
 
 public class SaleRepository : ISaleRepository
 {

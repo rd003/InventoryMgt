@@ -1,6 +1,6 @@
-using InventoryMgt.Data.Models.DTOs;
+using InventoryMgt.Shared.DTOs;
 
-namespace InventoryMgt.Data.Repositories;
+namespace InventoryMgt.Shared.Repositories;
 
 public interface IStockRepository
 {

@@ -1,7 +1,7 @@
 ﻿using InventoryMgt.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace InventoryMgt.Data.models;
+namespace InventoryMgt.Data.Models;
 
 public class AppDbContext : DbContext
 {

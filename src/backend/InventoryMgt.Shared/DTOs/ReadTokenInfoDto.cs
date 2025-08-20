@@ -1,6 +1,6 @@
-namespace InventoryMgt.Data.Models;
+﻿namespace InventoryMgt.Shared.DTOs;
 
-public class TokenInfo
+public class ReadTokenInfoDto
 {
     public int Id { get; set; }
 

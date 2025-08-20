@@ -1,6 +1,6 @@
-namespace InventoryMgt.Data.Models.DTOs;
+namespace InventoryMgt.Shared.DTOs;
 
-using InventoryMgt.Data.models.DTOs;
+using InventoryMgt.Shared.DTOs;
 
 public class StockDisplayModel
 {

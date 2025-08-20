@@ -1,7 +1,7 @@
-using InventoryMgt.Data.models.DTOs;
-using InventoryMgt.Data.Models.DTOs;
+using InventoryMgt.Shared.DTOs;
+using InventoryMgt.Shared.DTOs;
 
-namespace InventoryMgt.Data.Repositories;
+namespace InventoryMgt.Shared.Repositories;
 
 public interface ISupplierRepository
 {

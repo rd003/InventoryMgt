@@ -1,4 +1,4 @@
-namespace InventoryMgt.Data.CustomExceptions;
+namespace InventoryMgt.Shared.CustomExceptions;
 
 public class BadRequestException : Exception
 {

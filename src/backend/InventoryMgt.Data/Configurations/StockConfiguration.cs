@@ -1,5 +1,5 @@
 using System;
-using InventoryMgt.Data.models;
+using InventoryMgt.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

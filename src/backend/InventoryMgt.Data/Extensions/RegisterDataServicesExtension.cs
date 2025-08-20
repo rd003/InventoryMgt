@@ -1,5 +1,7 @@
-﻿using InventoryMgt.Data.models;
+﻿using InventoryMgt.Data.Models;
 using InventoryMgt.Data.Repositories;
+using InventoryMgt.Shared.Contracts;
+using InventoryMgt.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +20,7 @@ public static class RegisterDataServicesExtension
         services.AddTransient<ISaleRepository, SaleRepository>();
         services.AddTransient<ISupplierRepository, SupplierRepository>();
         services.AddTransient<IAuthRepository, AuthRepository>();
+        services.AddTransient<ITokenInfoRepository, TokenInfoRepository>();
 
         return services;
     }
