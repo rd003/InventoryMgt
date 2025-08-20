@@ -1,3 +1,4 @@
+using InventoryMgt.Data.Mappers;
 using InventoryMgt.Data.models;
 using InventoryMgt.Data.models.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -27,13 +28,30 @@ public class AuthRepository : IAuthRepository
         return user.Id;
     }
 
-    public async Task LoginAsync(LoginDto loginData)
+    public async Task<UserReadDto> LoginAsync(LoginDto loginData)
     {
-        var user = await _context.Users.AsNoTracking().SingleAsync(u => u.Username == loginData.Username);
-        if (!BCrypt.Net.BCrypt.Verify(loginData.Password, loginData.Password))
+        var user = await _context.Users
+               .AsNoTracking()
+               .SingleOrDefaultAsync(u => u.Username == loginData.Username);
+
+        if (user is null)
         {
-            // create 401 exception
+            throw new InvalidOperationException("Invalid credential");
         }
+
+        if (!BCrypt.Net.BCrypt.Verify(loginData.Password, user.PasswordHash))
+        {
+            throw new InvalidOperationException("Invalid credential");
+        }
+
+        return user.ToUserReadDto();
+    }
+
+    public async Task<UserReadDto?> GetUserByUsernameAsync(string username)
+    {
+        var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Username == username);
+        if (user == null) return default;
+        return user.ToUserReadDto();
     }
 
 }

@@ -3,6 +3,7 @@ using InventoryMgt.Api.CustomExceptions;
 using InventoryMgt.Api.Models;
 
 namespace InventoryMgt.Api.Middlewares;
+
 public class ExceptionMiddleware : IMiddleware
 {
     private readonly ILogger<ExceptionMiddleware> _logger;
@@ -19,7 +20,7 @@ public class ExceptionMiddleware : IMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
+            _logger.LogError(ex, "An error is occured"); //Argument 2: cannot convert from 'System.Exception' to 'string?'
             await HandleException(context, ex);
         }
     }
@@ -34,6 +35,9 @@ public class ExceptionMiddleware : IMiddleware
                 break;
             case BadRequestException _:
                 statusCode = StatusCodes.Status400BadRequest;
+                break;
+            case UnauthorizedException _:
+                statusCode = StatusCodes.Status401Unauthorized;
                 break;
         }
         var errorResponse = new ErrorResponse

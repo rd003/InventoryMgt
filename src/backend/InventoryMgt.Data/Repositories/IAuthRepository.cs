@@ -5,5 +5,6 @@ namespace InventoryMgt.Data.Repositories;
 public interface IAuthRepository
 {
     Task<int> SignupAsync(CreateUserDto userToCreate);
-    Task LoginAsync(LoginDto loginData);
+    Task<UserReadDto> LoginAsync(LoginDto loginData);
+    Task<UserReadDto?> GetUserByUsernameAsync(string username);
 }

@@ -8,10 +8,3 @@ public class NotFoundException : Exception
     }
 }
 
-public class BadRequestException : Exception
-{
-    public BadRequestException(string message) : base(message)
-    {
-
-    }
-}
