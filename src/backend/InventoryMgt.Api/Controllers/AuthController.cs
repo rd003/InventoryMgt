@@ -60,9 +60,10 @@ namespace InventoryMgt.Api.Controllers
             }
             else
             {
-                tokenInfo.RefreshToken = refreshToken;
-                tokenInfo.ExpiredAt = DateTime.UtcNow.AddMinutes(1);// TODO: Change to 7 days
-                await _tokenInfoRepository.UpdateTokenInfoAsync(tokenInfo.ToUpdateTokenInfoDto());
+                var tokenInfoToUpdate = tokenInfo.ToUpdateTokenInfoDto();
+                tokenInfoToUpdate.RefreshToken = refreshToken;
+                tokenInfoToUpdate.ExpiredAt = DateTime.UtcNow.AddMinutes(1);// TODO: Change to 7 days
+                await _tokenInfoRepository.UpdateTokenInfoAsync(tokenInfoToUpdate);
             }
 
             return Ok(new TokenModel
@@ -72,8 +73,38 @@ namespace InventoryMgt.Api.Controllers
             });
         }
 
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh(TokenModel tokenModel)
+        {
+            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken) ?? throw new BadRequestException("Invalid expired token");
+
+            var username = principal.Identity?.Name ?? "";
+
+            var tokenInfo = await _tokenInfoRepository.GetTokenInfoByUsernameAsync(username);
+            if (tokenInfo == null
+            || tokenInfo.RefreshToken != tokenModel.RefreshToken
+            || tokenInfo.ExpiredAt <= DateTime.UtcNow)
+            {
+                return BadRequest("Invalid refresh token. Please login again.");
+            }
+
+            var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
+            var newRefreshToken = _tokenService.GenerateRefreshToken();
+
+            tokenInfo.RefreshToken = newRefreshToken; // rotating the refresh token
+            await _tokenInfoRepository.UpdateTokenInfoAsync(tokenInfo.ToUpdateTokenInfoDto());
+
+            return Ok(new TokenModel
+            {
+                AccessToken = newAccessToken,
+                RefreshToken = newRefreshToken
+            });
+
+        }
+
+
         [Authorize]
-        [HttpPost("me")]
+        [HttpGet("me")]
         public async Task<IActionResult> GetMyInfo()
         {
             var username = User.Identity?.Name;

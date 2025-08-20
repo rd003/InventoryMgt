@@ -13,6 +13,9 @@ public class TokenInfoConfiguration : IEntityTypeConfiguration<TokenInfo>
         builder.HasKey(a => a.Id)
         .HasName("pk_token_info");
 
+        builder.HasIndex(a => a.Username, "uq_token_info_username")
+            .IsUnique();
+
         builder.Property(p => p.Id)
         .HasColumnName("id");
 

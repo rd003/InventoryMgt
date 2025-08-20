@@ -1,4 +1,5 @@
 @base_address = http://localhost:5131/api/auth
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiMzIzMzRhYjEtOTI2YS00MDQzLWExMTgtYmU4NmY0ZjQ0NjA0Iiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU1NzEyODAyLCJleHAiOjE3NTU3MTM0MDIsImlhdCI6MTc1NTcxMjgwMiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIn0.7JXRPURs291TavGv1Vs6Ik7trZQYLfrnatwFZDCFaVE
 
 POST {{base_address}}/login
 Content-Type: application/json
@@ -7,3 +8,17 @@ Content-Type: application/json
     "username":"admin",
     "password":"Admin@123"
 }
+
+###
+POST {{base_address}}/refresh
+Content-Type: application/json
+
+{
+  "accessToken": "aHR0cDovL2xvY2FsaG9zdDo1MTMxIn0.DtBXiCyHhkjP6PHSd_YqKSeigGbwp8Tj3pBML93FJDE",
+  "refreshToken": "ruQdgvrOmOMG+rAYzidPy3hovy1a4KYYaiUOPewL3r0="
+}
+
+###
+GET {{base_address}}/me
+
+Authorization: Bearer {{accessToken}}

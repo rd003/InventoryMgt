@@ -3,6 +3,7 @@ using System;
 using InventoryMgt.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace InventoryMgt.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class InventoryMgtContextModelSnapshot : ModelSnapshot
+    [Migration("20250820172216_TokenInfoUsernameUnique")]
+    partial class TokenInfoUsernameUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

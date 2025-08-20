@@ -42,6 +42,7 @@ public static class TokenInfoMapper
     {
         return new TokenInfo
         {
+            Id = tokenInfo.Id,
             Username = tokenInfo.Username,
             RefreshToken = tokenInfo.RefreshToken,
             ExpiredAt = tokenInfo.ExpiredAt

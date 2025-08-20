@@ -27,7 +27,7 @@ public class TokenService : ITokenService
             Issuer = _configuration["JWT:ValidIssuer"],
             Audience = _configuration["JWT:ValidAudience"],
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddMinutes(15),
+            Expires = DateTime.Now.AddMinutes(10), // Make sure to change it to 15 minutes
             SigningCredentials = new SigningCredentials
         (authSigningKey, SecurityAlgorithms.HmacSha256)
         };
@@ -63,7 +63,7 @@ public class TokenService : ITokenService
             ValidateLifetime = false,
             ClockSkew = TimeSpan.Zero,
             IssuerSigningKey = new SymmetricSecurityKey
-        (Encoding.UTF8.GetBytes(_configuration["JWT:secret"]))
+        (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]))
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

@@ -1,4 +1,4 @@
-using InventoryMgt.Api.Extensions;  // This line must be included
+using InventoryMgt.Api.Extensions;  
 using InventoryMgt.Api.Middlewares;
 using InventoryMgt.Data.Utils;
 using InventoryMgt.Data.Extensions;
@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 DapperUtil.ConfigureDapper();
 
-// TODO: These settings can be extracted out from here
+// Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -28,9 +28,10 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JWT:ValidAudience"],
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         ClockSkew = TimeSpan.Zero,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:secret"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
 });
+
 
 
 // Add services to the container.
