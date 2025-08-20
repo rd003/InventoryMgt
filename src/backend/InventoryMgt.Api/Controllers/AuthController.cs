@@ -1,3 +1,6 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using InventoryMgt.Api.Services;
 using InventoryMgt.Data.CustomExceptions;
 using InventoryMgt.Data.models.DTOs;
 using InventoryMgt.Data.Repositories;
@@ -11,17 +14,32 @@ namespace InventoryMgt.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthRepository _authRepo;
+        private readonly ITokenService _tokenService;
 
-        public AuthController(IAuthRepository authRepo)
+        public AuthController(IAuthRepository authRepo, ITokenService tokenService)
         {
             _authRepo = authRepo;
+            _tokenService = tokenService;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginData)
         {
             var user = await _authRepo.LoginAsync(loginData);
-            return Ok(user);
+
+            List<Claim> claims = [
+                new (ClaimTypes.Name, user.Username),  // claim to store name
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            // unique identifier for jwt
+            ];
+
+            // adding role to claims
+
+            claims.Add(new Claim(ClaimTypes.Role, user.Role));
+
+            // generating access token
+            var token = _tokenService.GenerateAccessToken(claims);
+            return Ok(token);
         }
 
         [Authorize]
