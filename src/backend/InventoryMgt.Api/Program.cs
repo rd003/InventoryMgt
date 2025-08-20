@@ -20,5 +20,5 @@ app.UseCors();
 app.UseAuthorization();
 app.ConfigureExceptionMiddleware();
 app.MapControllers();
-
+await app.InitializeDatabaseAsync();
 app.Run();

@@ -7,9 +7,9 @@ namespace InventoryMgt.Data.Extensions;
 
 public static class RegisterDataServicesExtension
 {
-    public static IServiceCollection RegisterDataServices(this IServiceCollection services,string connectionString)
+    public static IServiceCollection RegisterDataServices(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<AppDbContext>(o=>o.UseNpgsql(connectionString));
+        services.AddDbContext<AppDbContext>(o => o.UseNpgsql(connectionString));
 
         services.AddTransient<ICategoryRepository, CategoryRepository>();
         services.AddTransient<IProductRepository, ProductRepository>();
@@ -17,6 +17,7 @@ public static class RegisterDataServicesExtension
         services.AddTransient<IStockRepository, StockRepository>();
         services.AddTransient<ISaleRepository, SaleRepository>();
         services.AddTransient<ISupplierRepository, SupplierRepository>();
+        services.AddTransient<IAuthRepository, AuthRepository>();
 
         return services;
     }
