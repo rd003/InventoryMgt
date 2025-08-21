@@ -1,4 +1,4 @@
-using InventoryMgt.Api.Extensions;  
+using InventoryMgt.Api.Extensions;
 using InventoryMgt.Api.Middlewares;
 using InventoryMgt.Data.Utils;
 using InventoryMgt.Data.Extensions;
@@ -31,6 +31,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
 });
+
 
 
 

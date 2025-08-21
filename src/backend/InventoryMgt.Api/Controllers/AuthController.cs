@@ -54,7 +54,7 @@ namespace InventoryMgt.Api.Controllers
                 {
                     Username = user.Username,
                     RefreshToken = refreshToken,
-                    ExpiredAt = DateTime.UtcNow.AddMinutes(1) // TODO: Change to 7 days
+                    ExpiredAt = DateTime.UtcNow.AddMinutes(2) // TODO: Change to 7 days
                 };
                 await _tokenInfoRepository.AddTokenInfoAsync(tokenInfoDto);
             }
@@ -62,7 +62,7 @@ namespace InventoryMgt.Api.Controllers
             {
                 var tokenInfoToUpdate = tokenInfo.ToUpdateTokenInfoDto();
                 tokenInfoToUpdate.RefreshToken = refreshToken;
-                tokenInfoToUpdate.ExpiredAt = DateTime.UtcNow.AddMinutes(1);// TODO: Change to 7 days
+                tokenInfoToUpdate.ExpiredAt = DateTime.UtcNow.AddMinutes(2);// TODO: Change to 7 days
                 await _tokenInfoRepository.UpdateTokenInfoAsync(tokenInfoToUpdate);
             }
 

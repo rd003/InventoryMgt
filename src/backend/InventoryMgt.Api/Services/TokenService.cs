@@ -20,16 +20,16 @@ public class TokenService : ITokenService
 
         // Create a symmetric security key using the secret key from the configuration.
         var authSigningKey = new SymmetricSecurityKey
-        (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+                        (Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Issuer = _configuration["JWT:ValidIssuer"],
             Audience = _configuration["JWT:ValidAudience"],
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddMinutes(10), // Make sure to change it to 15 minutes
+            Expires = DateTime.Now.AddMinutes(1),
             SigningCredentials = new SigningCredentials
-        (authSigningKey, SecurityAlgorithms.HmacSha256)
+                          (authSigningKey, SecurityAlgorithms.HmacSha256)
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
