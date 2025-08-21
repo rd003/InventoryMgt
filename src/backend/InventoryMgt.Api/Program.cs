@@ -30,6 +30,19 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
     };
+
+    // cokie related config
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = ctx =>
+        {
+            ctx.Request.Cookies.TryGetValue("accessToken", out var accessToken);
+            if (!string.IsNullOrEmpty(accessToken))
+                ctx.Token = accessToken;
+
+            return Task.CompletedTask;
+        }
+    };
 });
 
 

@@ -66,16 +66,32 @@ namespace InventoryMgt.Api.Controllers
                 await _tokenInfoRepository.UpdateTokenInfoAsync(tokenInfoToUpdate);
             }
 
-            return Ok(new TokenModel
+            var tokenModel = new TokenModel
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
-            });
+            };
+
+            // set token cookies
+
+            _tokenService.SetTokenCookies(tokenModel, HttpContext);
+
+            // also sending it as a response, because cookie don't work with mobile app clients
+            return Ok(tokenModel);
         }
 
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh(TokenModel tokenModel)
         {
+            HttpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken);
+            HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
+
+            if (!string.IsNullOrEmpty(accessToken) && !string.IsNullOrEmpty(refreshToken))
+            {
+                tokenModel.AccessToken = accessToken;
+                tokenModel.RefreshToken = refreshToken;
+            }
+
             var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken) ?? throw new BadRequestException("Invalid expired token");
 
             var username = principal.Identity?.Name ?? "";
@@ -94,11 +110,18 @@ namespace InventoryMgt.Api.Controllers
             tokenInfo.RefreshToken = newRefreshToken; // rotating the refresh token
             await _tokenInfoRepository.UpdateTokenInfoAsync(tokenInfo.ToUpdateTokenInfoDto());
 
-            return Ok(new TokenModel
+            var newTokenData = new TokenModel
             {
                 AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken
-            });
+            };
+
+            // set token cookies
+
+            _tokenService.SetTokenCookies(newTokenData, HttpContext);
+
+            // also sending it as a response, because cookie don't work with mobile app clients
+            return Ok(newTokenData);
 
         }
 

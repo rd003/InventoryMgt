@@ -1,3 +1,4 @@
+using InventoryMgt.Shared.DTOs;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -85,5 +86,28 @@ public class TokenService : ITokenService
 
         // return the principal
         return principal;
+    }
+
+    public void SetTokenCookies(TokenModel tokenModel, HttpContext context)
+    {
+        context.Response.Cookies.Append("accessToken", tokenModel.AccessToken, new CookieOptions
+        {
+            Expires = DateTime.UtcNow.AddMinutes(1),  // TODO : set to 15 min
+            HttpOnly = true,
+            IsEssential = true,
+            Secure = true,
+            Path = "/",
+            SameSite = SameSiteMode.None // TODO: set it to strict or lax for production
+        });
+
+        context.Response.Cookies.Append("refreshToken", tokenModel.RefreshToken, new CookieOptions
+        {
+            Expires = DateTime.UtcNow.AddMinutes(2),  // TODO : set to atleast 7 days
+            HttpOnly = true,
+            IsEssential = true,
+            Secure = true,
+            Path = "/refresh",
+            SameSite = SameSiteMode.None // TODO: set it to strict or lax for production
+        });
     }
 }
