@@ -1,5 +1,5 @@
 @base_address = http://localhost:5131/api/auth
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiMmYyMGYxNzgtOTY3NS00M2Y0LTgxNjItZjdhZDkxNTI5OThmIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU1NzUzNTE0LCJleHAiOjE3NTU3NTM1NzQsImlhdCI6MTc1NTc1MzUxNCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTEzMSIsImh0dHA6Ly9sb2NhbGhvc3Q6NTEzMSJdfQ.Kr_hdEpvpbDlD3SGbxg3miQ7NhXEbhQ3IOQYmvADpkA
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiMjQ0YWU5MzgtZWQ4Ni00YTk5LWIwZTEtMThmMzk3ODcyODE1Iiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU1Nzg2Njc1LCJleHAiOjE3NTU3ODY3MzUsImlhdCI6MTc1NTc4NjY3NSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIn0.H3liLMevFb3bBmf0MvFdfaKtVcG81SwTtT61tXAAo1Q
 
 POST {{base_address}}/login
 Content-Type: application/json
@@ -20,4 +20,12 @@ Content-Type: application/json
 
 ###
 GET {{base_address}}/me
+Authorization: Bearer {{accessToken}}
+
+###
+POST {{base_address}}/refresh
+Authorization: Bearer {{accessToken}}
+
+###
+POST {{base_address}}/logout
 Authorization: Bearer {{accessToken}}

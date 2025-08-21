@@ -7,7 +7,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { Router } from "@angular/router";
 import { LoginModel } from "./login.model";
-import { NotificationComponent } from "../shared/notification.component";
+import { NotificationComponent } from "../../shared/notification.component";
 
 @Component({
     selector: "app-login",

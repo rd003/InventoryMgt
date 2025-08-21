@@ -17,8 +17,8 @@ public class TokenInfoRepository : ITokenInfoRepository
 
     public async Task<ReadTokenInfoDto?> GetTokenInfoByUsernameAsync(string username)
     {
-        var tokenInfo = await _context.TokenInfos.AsNoTracking().SingleOrDefaultAsync(t=>t.Username==username);
-        return tokenInfo==null? default :tokenInfo.ToReadTokenInfoDto();
+        var tokenInfo = await _context.TokenInfos.AsNoTracking().SingleOrDefaultAsync(t => t.Username == username);
+        return tokenInfo == null ? default : tokenInfo.ToReadTokenInfoDto();
     }
 
     public async Task<ReadTokenInfoDto> AddTokenInfoAsync(CreateTokenInfoDto tokenInfoToCreate)
@@ -26,11 +26,12 @@ public class TokenInfoRepository : ITokenInfoRepository
         var tokenInfo = tokenInfoToCreate.ToTokenInfo();
         _context.TokenInfos.Add(tokenInfo);
         await _context.SaveChangesAsync();
-        return new ReadTokenInfoDto {
-            Id=tokenInfo.Id,
+        return new ReadTokenInfoDto
+        {
+            Id = tokenInfo.Id,
             Username = tokenInfo.Username,
-            ExpiredAt= tokenInfo.ExpiredAt,
-            RefreshToken= tokenInfo.RefreshToken
+            ExpiredAt = tokenInfo.ExpiredAt,
+            RefreshToken = tokenInfo.RefreshToken
         };
     }
 
@@ -39,5 +40,11 @@ public class TokenInfoRepository : ITokenInfoRepository
         var tokenInfo = tokenInfoToUpdate.ToTokenInfo();
         _context.TokenInfos.Update(tokenInfo);
         await _context.SaveChangesAsync();
+    }
+
+
+    public async Task DeleteTokenInfoByUsername(string username)
+    {
+        await _context.TokenInfos.Where(t => t.Username == username).ExecuteDeleteAsync();
     }
 }

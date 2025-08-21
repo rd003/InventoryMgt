@@ -138,5 +138,39 @@ namespace InventoryMgt.Api.Controllers
             var user = await _authRepo.GetUserByUsernameAsync(username);
             return Ok(user);
         }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            string? username = User.Identity?.Name;
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new UnauthorizedException("You are not authorized");
+            }
+
+            // remove token info from database
+            await _tokenInfoRepository.DeleteTokenInfoByUsername(username);
+
+            // remove token cookies
+            Response.Cookies.Delete("accessToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Path = "/",
+                SameSite = SameSiteMode.None // TODO: change to strict/lax in production
+            });
+
+            Response.Cookies.Delete("refreshToken", new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Path = "/refresh",
+                SameSite = SameSiteMode.None // TODO: change to strict/lax in production
+            });
+
+            return NoContent();
+        }
     }
+
 }
