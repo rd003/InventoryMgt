@@ -2,9 +2,9 @@ using System.Data;
 using Dapper;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
-using InventoryMgt.Data.models.DTOs;
+using InventoryMgt.Shared.DTOs;
 
-namespace InventoryMgt.Data.Repositories;
+namespace InventoryMgt.Shared.Repositories;
 
 public class PurchaseRepository : IPurchaseRepository
 {

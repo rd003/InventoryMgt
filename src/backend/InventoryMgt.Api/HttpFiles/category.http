@@ -1,0 +1,40 @@
+@base_address = http://localhost:5131/api/categories
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiODcyMjc0YjAtYmM0Yy00NjcyLTk2YjYtOWE1YzlkZDdlOTMzIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU1NzUzMTE3LCJleHAiOjE3NTU3NTQwMTcsImlhdCI6MTc1NTc1MzExNywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIn0.Rd44loL-TUJorHA_DIBiYckvBJfKh9Bdf6Ld1pGjXF4
+
+// get all
+GET {{base_address}}
+Authorization: Bearer {{accessToken}}
+
+### get all with optional parameters
+GET {{base_address}}?searchTerm=gg
+Authorization: Bearer {{accessToken}}
+
+### Get by id
+
+GET {{base_address}}/20
+Authorization: Bearer {{accessToken}}
+
+###
+POST {{base_address}}
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "categoryName":"category1",
+    "categoryId": null
+}
+
+###
+PUT {{base_address}}/20
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "id":20,
+    "categoryName":"child19_112",
+    "categoryId": 19
+}
+
+###
+DELETE {{base_address}}/20
+Authorization: Bearer {{accessToken}}

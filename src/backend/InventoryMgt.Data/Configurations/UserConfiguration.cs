@@ -1,4 +1,4 @@
-using InventoryMgt.Data.models;
+using InventoryMgt.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace InventoryMgt.Data.Configurations;
@@ -30,5 +30,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         .HasColumnName("password_hash")
         .IsRequired()
         .HasMaxLength(200);
+
+        builder.Property(b => b.Role)
+        .HasColumnName("role")
+        .IsRequired()
+        .HasMaxLength(15);
     }
 }

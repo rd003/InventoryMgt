@@ -1,0 +1,23 @@
+@base_address = http://localhost:5131/api/auth
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiMmYyMGYxNzgtOTY3NS00M2Y0LTgxNjItZjdhZDkxNTI5OThmIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU1NzUzNTE0LCJleHAiOjE3NTU3NTM1NzQsImlhdCI6MTc1NTc1MzUxNCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NTEzMSIsImh0dHA6Ly9sb2NhbGhvc3Q6NTEzMSJdfQ.Kr_hdEpvpbDlD3SGbxg3miQ7NhXEbhQ3IOQYmvADpkA
+
+POST {{base_address}}/login
+Content-Type: application/json
+
+{
+    "username":"admin",
+    "password":"Admin@123"
+}
+
+###
+POST {{base_address}}/refresh
+Content-Type: application/json
+
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiZTk1YjUyNGItZGI2OC00NWQ1LWJlNTAtNDNlNGFlYjkyYjY1Iiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU1NzU2NTg1LCJleHAiOjE3NTU3NTY2NDUsImlhdCI6MTc1NTc1NjU4NSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIn0.b-ov4fpyC6lymwxl4ReOF_B3ZxyR8vT0et0DU9rAcgU",
+  "refreshToken": "cXJcDn1sl/C+IBSGl14H+rWvbzRd9KhCyc4mIEvvxh0="
+}
+
+###
+GET {{base_address}}/me
+Authorization: Bearer {{accessToken}}

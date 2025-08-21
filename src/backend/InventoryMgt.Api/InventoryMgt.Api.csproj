@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../InventoryMgt.Shared/InventoryMgt.Shared.csproj" />
     <ProjectReference Include="..\InventoryMgt.Data\InventoryMgt.Data.csproj" />
   </ItemGroup>
 

@@ -1,10 +1,12 @@
-using InventoryMgt.Api.CustomExceptions;
-using InventoryMgt.Data.models.DTOs;
-using InventoryMgt.Data.Repositories;
+using InventoryMgt.Shared.CustomExceptions;
+using InventoryMgt.Shared.DTOs;
+using InventoryMgt.Shared.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryMgt.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/categories")]
 public class CategoryController : ControllerBase

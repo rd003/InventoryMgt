@@ -19,10 +19,12 @@ An `inventory management` project with angular and .net core apis.
 - **UI:** Angular material (UI component library)
 - **State Management:** `Ngrx componnent store` (Almost everywhere) and `service with signal` (For newer features).
 
-## How to run the project in dev environment
+## Run this project with docker (coming soon)
 
-- Make sure you have installed `dotnet 9` sdk,latest node js and angular cli.
-- **Clone this project:** Open terminal and run `git clone https://github.com/rd003/InventroyMgt.git`
+## To run this project in dev environment
+
+- Make sure you have installed `dotnet 9.0` sdk, a latest version node js and angular cli.
+- **Clone this project:** Open a terminal and run `git clone https://github.com/rd003/InventroyMgt.git`
 - `cd `
 - With command `code .`, your project will be opened in VS Code.
 - You need to run both projects separately:
@@ -40,6 +42,32 @@ An `inventory management` project with angular and .net core apis.
 1. Open the another integrated terminal (keep the terminal open, where your backend project is running).
 2. Execute the command `npm i` to install all the dependencies.
 3. Execute `ng serve --open` to run and open this project in browser.
+
+## Are you facing problems on migrations?
+
+You might get error while executing them using ` dot net CLI`, because we have multiple projects. You won't face this problem while using `Package Manage Console` of `Visual Studio`.
+
+Error might be something like this:
+
+```txt
+Unable to create a 'DbContext' of type 'RuntimeType'. The exception 'Unable to resolve service for type 'Microsoft.EntityFrameworkCore.DbContextOptions`1[InventoryMgt.Data.models.AppDbContext]' while attempting to activate 'InventoryMgt.Data.models.AppDbContext'.' was thrown while attempting to create an instance. For the different patterns supported at design time, see https://go.microsoft.com/fwlink/?linkid=851728
+```
+
+Visit to the root directory of backend project, which named `backend` in our case. So visit to `backend` directory and execute these commands in a sequece:
+
+**Creating migration:**
+
+```sh
+dotnet ef migrations add SomeMigration --project InventoryMgt.Data --startup-project InventoryMgt.Api
+```
+
+Note: You need to replace `SomeMigration` to a meaningful name.
+
+**Update database:** However, this project can apply migration while you run it. But, in case you manually want to run it. 
+
+```sh
+dotnet ef database update --project InventoryMgt.Data --startup-project InventoryMgt.Api
+```
 
 ## Screenshots
 
