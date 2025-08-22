@@ -14,9 +14,11 @@ public static class ServiceRegistratonExtension
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("*").  // Please register specific origin, dont allow it for everyone, I am doing it deliberately.
+                policy.WithOrigins("http://localhost:4200").
+                AllowCredentials().
                 AllowAnyHeader().
                 AllowAnyMethod().WithExposedHeaders("X-Pagination");
+
             });
         });
         return services;

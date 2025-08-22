@@ -21,6 +21,12 @@ public class TokenInfoRepository : ITokenInfoRepository
         return tokenInfo == null ? default : tokenInfo.ToReadTokenInfoDto();
     }
 
+    public async Task<ReadTokenInfoDto?> GetTokenInfoByRefreshTokenAsync(string refreshToken)
+    {
+        var tokenInfo = await _context.TokenInfos.AsNoTracking().SingleOrDefaultAsync(t => t.RefreshToken == refreshToken);
+        return tokenInfo == null ? default : tokenInfo.ToReadTokenInfoDto();
+    }
+
     public async Task<ReadTokenInfoDto> AddTokenInfoAsync(CreateTokenInfoDto tokenInfoToCreate)
     {
         var tokenInfo = tokenInfoToCreate.ToTokenInfo();

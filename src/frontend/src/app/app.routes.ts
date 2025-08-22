@@ -1,5 +1,6 @@
 import { Routes } from "@angular/router";
 import { LoginComponent } from "./auth/login/login.component";
+import { authGuard } from "./guards/auth.guard";
 
 export const routes: Routes = [
   {
@@ -9,6 +10,7 @@ export const routes: Routes = [
   {
     path: "dashboard",
     loadComponent: () => import("./dashboard.component").then(a => a.DashbardComponent),
+    canActivate: [authGuard]
   },
   {
     path: "categories",
@@ -16,6 +18,7 @@ export const routes: Routes = [
       const a = await import("./category/category.component");
       return a.CategoryComponent;
     },
+    canActivate: [authGuard]
   },
   {
     path: "products",
@@ -23,6 +26,7 @@ export const routes: Routes = [
       const a = await import("./products/product.component");
       return a.ProductComponent;
     },
+    canActivate: [authGuard]
   },
   {
     path: "purchases",
@@ -30,10 +34,12 @@ export const routes: Routes = [
       const a = await import("./purchase/purchase.component");
       return a.PurchaseComponent;
     },
+    canActivate: [authGuard]
   },
   {
     path: "suppliers",
-    loadComponent: () => import("./suppliers/supplier.component").then(s => s.SupplierComponent)
+    loadComponent: () => import("./suppliers/supplier.component").then(s => s.SupplierComponent),
+    canActivate: [authGuard]
   },
   {
     path: "",
@@ -44,11 +50,13 @@ export const routes: Routes = [
     path: "sales",
     loadComponent: () =>
       import("./sales/sale.component").then((c) => c.SaleComponent),
+    canActivate: [authGuard]
   },
   {
     path: "stock",
     loadComponent: () =>
       import("./stocks/stock.component").then((a) => a.StockComponent),
+    canActivate: [authGuard]
   },
   {
     path: "**",
