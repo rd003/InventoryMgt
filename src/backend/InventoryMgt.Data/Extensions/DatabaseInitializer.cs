@@ -1,3 +1,4 @@
+using System.Text.Json;
 using InventoryMgt.Data.Constants;
 using InventoryMgt.Data.Models;
 using InventoryMgt.Shared.DTOs;
@@ -20,7 +21,7 @@ public static class DatabaseInitializer
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var authRepo = scope.ServiceProvider.GetRequiredService<IAuthRepository>();
 
-            if(dbContext.Database.GetPendingMigrations().Count()>0)
+            if (dbContext.Database.GetPendingMigrations().Count() > 0)
             {
                 await dbContext.Database.MigrateAsync();
             }
@@ -38,12 +39,90 @@ public static class DatabaseInitializer
                 await authRepo.SignupAsync(user);
                 Console.WriteLine("====> Admin entry is created.");
             }
-            // TODO: Seed Category,product and suppliers too
+
+            // Seed Categories
+            if (!await dbContext.Categories.AnyAsync())
+            {
+                var categories = await LoadSeedDataAsync<Category>("categories.json");
+                if (categories.Any())
+                {
+                    await dbContext.Categories.AddRangeAsync(categories);
+                    await dbContext.SaveChangesAsync();
+                    Console.WriteLine($"====> {categories.Count} categories seeded successfully.");
+                }
+            }
+
+            // Seed Suppliers
+            if (!await dbContext.Suppliers.AnyAsync())
+            {
+                var suppliers = await LoadSeedDataAsync<Supplier>("suppliers.json");
+                if (suppliers.Any())
+                {
+                    await dbContext.Suppliers.AddRangeAsync(suppliers);
+                    await dbContext.SaveChangesAsync();
+                    Console.WriteLine($"====> {suppliers.Count} suppliers seeded successfully.");
+                }
+            }
+
+            // Seed Products
+            if (!await dbContext.Products.AnyAsync())
+            {
+                var products = await LoadSeedDataAsync<Product>("products.json");
+                if (products.Any())
+                {
+                    await dbContext.Products.AddRangeAsync(products);
+                    await dbContext.SaveChangesAsync();
+                    Console.WriteLine($"====> {products.Count} products seeded successfully.");
+                }
+            }
         }
         catch (Exception ex)
         {
             Console.WriteLine("====>" + ex.Message);
             throw;
         }
+    }
+
+    private static async Task<List<T>> LoadSeedDataAsync<T>(string fileName)
+    {
+        var basePath = AppDomain.CurrentDomain.BaseDirectory;
+        var dataPath = Path.Combine(basePath, "Data", fileName);
+
+        // Alternative path if running from development environment
+        if (!File.Exists(dataPath))
+        {
+            // Try to find the file relative to the project structure
+            var projectPath = Directory.GetCurrentDirectory();
+            var alternativePaths = new[]
+                {
+                    Path.Combine(projectPath, "InventoryMgt.Data", "Data", fileName),
+                    Path.Combine(projectPath, "Data", fileName),
+                    Path.Combine(Directory.GetParent(projectPath)?.FullName ?? "", "InventoryMgt.Data", "Data", fileName)
+                };
+            foreach (var altPath in alternativePaths)
+            {
+                if (File.Exists(altPath))
+                {
+                    dataPath = altPath;
+                    break;
+                }
+            }
+        }
+
+        if (!File.Exists(dataPath))
+        {
+            Console.WriteLine($"====> Seed data file not found: {fileName} at {dataPath}");
+            return new List<T>();
+        }
+
+        var jsonContent = await File.ReadAllTextAsync(dataPath);
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        var data = JsonSerializer.Deserialize<List<T>>(jsonContent, options);
+        return data ?? new List<T>();
     }
 }
