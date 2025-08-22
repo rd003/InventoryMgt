@@ -1,0 +1,106 @@
+[
+    {
+        "Id": 1,
+        "CategoryName": "Electronics",
+        "CategoryId": null,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 2,
+        "CategoryName": "Smartphones",
+        "CategoryId": 1,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 3,
+        "CategoryName": "Laptops",
+        "CategoryId": 1,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 4,
+        "CategoryName": "Tablets",
+        "CategoryId": 1,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 5,
+        "CategoryName": "Clothing",
+        "CategoryId": null,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 6,
+        "CategoryName": "Men's Clothing",
+        "CategoryId": 5,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 7,
+        "CategoryName": "Women's Clothing",
+        "CategoryId": 5,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 8,
+        "CategoryName": "Home & Garden",
+        "CategoryId": null,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 9,
+        "CategoryName": "Furniture",
+        "CategoryId": 8,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 10,
+        "CategoryName": "Kitchen Appliances",
+        "CategoryId": 8,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 11,
+        "CategoryName": "Sports & Outdoors",
+        "CategoryId": null,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 12,
+        "CategoryName": "Fitness Equipment",
+        "CategoryId": 11,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 13,
+        "CategoryName": "Outdoor Gear",
+        "CategoryId": 11,
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    }
+]

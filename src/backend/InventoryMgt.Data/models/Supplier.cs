@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace InventoryMgt.Data.Models;
 
-namespace InventoryMgt.Data.Models;
-
-public  class Supplier
+public class Supplier
 {
     public int Id { get; set; }
 

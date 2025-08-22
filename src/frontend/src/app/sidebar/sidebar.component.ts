@@ -62,7 +62,7 @@ import { AuthStore } from "../auth/auth.store";
         </button>
         
         <a
-          href="https://github.com/rd003/InventoryMgtAngular"
+          href="https://github.com/rd003/InventoryMgt"
           target="_blank"
           mat-icon-button
           class="github-btn"

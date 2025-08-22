@@ -1,0 +1,222 @@
+[
+    {
+        "Id": 1,
+        "ProductName": "iPhone 15 Pro",
+        "CategoryId": 2,
+        "Price": 999.99,
+        "SupplierId": 1,
+        "Sku": "IPH-15-PRO-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 2,
+        "ProductName": "Samsung Galaxy S24",
+        "CategoryId": 2,
+        "Price": 899.99,
+        "SupplierId": 1,
+        "Sku": "SAM-S24-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 3,
+        "ProductName": "MacBook Pro 16-inch",
+        "CategoryId": 3,
+        "Price": 2499.99,
+        "SupplierId": 1,
+        "Sku": "MBP-16-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 4,
+        "ProductName": "Dell XPS 13",
+        "CategoryId": 3,
+        "Price": 1299.99,
+        "SupplierId": 5,
+        "Sku": "DELL-XPS13-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 5,
+        "ProductName": "iPad Pro 12.9-inch",
+        "CategoryId": 4,
+        "Price": 1199.99,
+        "SupplierId": 1,
+        "Sku": "IPAD-PRO-12-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 6,
+        "ProductName": "Samsung Galaxy Tab S9",
+        "CategoryId": 4,
+        "Price": 799.99,
+        "SupplierId": 5,
+        "Sku": "SAM-TAB-S9-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 7,
+        "ProductName": "Men's Casual Shirt",
+        "CategoryId": 6,
+        "Price": 49.99,
+        "SupplierId": 2,
+        "Sku": "MCS-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 8,
+        "ProductName": "Men's Jeans",
+        "CategoryId": 6,
+        "Price": 79.99,
+        "SupplierId": 2,
+        "Sku": "MJ-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 9,
+        "ProductName": "Women's Summer Dress",
+        "CategoryId": 7,
+        "Price": 89.99,
+        "SupplierId": 2,
+        "Sku": "WSD-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 10,
+        "ProductName": "Women's Blazer",
+        "CategoryId": 7,
+        "Price": 129.99,
+        "SupplierId": 2,
+        "Sku": "WB-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 11,
+        "ProductName": "Modern Sofa Set",
+        "CategoryId": 9,
+        "Price": 899.99,
+        "SupplierId": 3,
+        "Sku": "MSS-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 12,
+        "ProductName": "Dining Table",
+        "CategoryId": 9,
+        "Price": 599.99,
+        "SupplierId": 3,
+        "Sku": "DT-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 13,
+        "ProductName": "Stainless Steel Refrigerator",
+        "CategoryId": 10,
+        "Price": 1299.99,
+        "SupplierId": 6,
+        "Sku": "SSR-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 14,
+        "ProductName": "Microwave Oven",
+        "CategoryId": 10,
+        "Price": 299.99,
+        "SupplierId": 6,
+        "Sku": "MO-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 15,
+        "ProductName": "Treadmill Pro",
+        "CategoryId": 12,
+        "Price": 1599.99,
+        "SupplierId": 4,
+        "Sku": "TP-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 16,
+        "ProductName": "Adjustable Dumbbells",
+        "CategoryId": 12,
+        "Price": 299.99,
+        "SupplierId": 4,
+        "Sku": "AD-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 17,
+        "ProductName": "Hiking Backpack",
+        "CategoryId": 13,
+        "Price": 149.99,
+        "SupplierId": 4,
+        "Sku": "HB-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 18,
+        "ProductName": "Camping Tent",
+        "CategoryId": 13,
+        "Price": 199.99,
+        "SupplierId": 4,
+        "Sku": "CT-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 19,
+        "ProductName": "Wireless Headphones",
+        "CategoryId": 1,
+        "Price": 199.99,
+        "SupplierId": 1,
+        "Sku": "WH-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    },
+    {
+        "Id": 20,
+        "ProductName": "Smart Watch",
+        "CategoryId": 1,
+        "Price": 399.99,
+        "SupplierId": 5,
+        "Sku": "SW-001",
+        "CreateDate": "2024-01-01T00:00:00Z",
+        "UpdateDate": "2024-01-01T00:00:00Z",
+        "IsDeleted": false
+    }
+]
