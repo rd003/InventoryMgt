@@ -25,6 +25,7 @@ export class AuthStore {
 
     user = computed(() => this.state().user);
     loading = computed(() => this.state().loading);
+    loaded = computed(() => !this.state().loading);
     error = computed(() => this.state().error);
     authenticated = computed(() => !!this.state().user);
 
@@ -36,7 +37,7 @@ export class AuthStore {
         ).subscribe(
             {
                 next: () => {
-
+                    this.loadStore();
                 },
                 error: (err) => {
                     this.setError(err);
@@ -44,14 +45,17 @@ export class AuthStore {
             }
         )
     }
+    public clearState = () => {
+        this.state.update(() => this.initialState);
+    }
 
     logout = () => {
         this.setLoading();
         this.authService.logout().pipe(
-            takeUntilDestroyed()
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe({
             next: () => {
-                this.loadStore();
+                this.clearState();
             },
             error: (err) => this.setError(err)
         }

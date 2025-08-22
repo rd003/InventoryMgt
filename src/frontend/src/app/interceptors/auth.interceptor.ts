@@ -16,7 +16,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authStore = inject(AuthStore);
 
   // to avoid infinite loop
-  if (req.url.includes('refresh') || req.url.includes('/login')) {
+  if (req.url.includes('/auth/refresh') || req.url.includes('/auth/login')) {
     return next(req);
   }
 
@@ -66,13 +66,13 @@ function handle401Error(req: HttpRequest<unknown>, next: HttpHandlerFn, router: 
       refreshTokenSubject.next(false);
 
       // Clear user data and redirect to login
-      authStore.logout();
+      authStore.clearState();
       router.navigate(['/login']);
 
       return throwError(() => refreshError);
     }),
     finalize(() => {
       isRefreshing = false;
-    })
+    }),
   );
 }

@@ -7,6 +7,7 @@ public interface ITokenService
 {
     string GenerateAccessToken(IEnumerable<Claim> claims);
     string GenerateRefreshToken();
-    ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken);
+    IEnumerable<Claim> GenerateClaims(string username, string role);
+    // ClaimsPrincipal GetPrincipalFromExpiredToken(string accessToken);
     void SetTokenCookies(TokenModel tokenModel, HttpContext context);
 }

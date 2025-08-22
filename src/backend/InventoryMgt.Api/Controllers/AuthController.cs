@@ -27,21 +27,14 @@ namespace InventoryMgt.Api.Controllers
             _tokenInfoRepository = tokenInfoRepository;
         }
 
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginData)
         {
             var user = await _authRepo.LoginAsync(loginData);
 
-            List<Claim> claims = [
-                new (ClaimTypes.Name, user.Username),  // claim to store name
-            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            // unique identifier for jwt
-            ];
-
-            // adding role to claims
-
-            claims.Add(new Claim(ClaimTypes.Role, user.Role));
-
+            var claims = _tokenService.GenerateClaims(user.Username, user.Role);
             // generating access and refresh token
             var accessToken = _tokenService.GenerateAccessToken(claims);
             string refreshToken = _tokenService.GenerateRefreshToken();
@@ -54,7 +47,7 @@ namespace InventoryMgt.Api.Controllers
                 {
                     Username = user.Username,
                     RefreshToken = refreshToken,
-                    ExpiredAt = DateTime.UtcNow.AddMinutes(2) // TODO: Change to 7 days
+                    ExpiredAt = DateTime.UtcNow.AddDays(30)
                 };
                 await _tokenInfoRepository.AddTokenInfoAsync(tokenInfoDto);
             }
@@ -62,7 +55,7 @@ namespace InventoryMgt.Api.Controllers
             {
                 var tokenInfoToUpdate = tokenInfo.ToUpdateTokenInfoDto();
                 tokenInfoToUpdate.RefreshToken = refreshToken;
-                tokenInfoToUpdate.ExpiredAt = DateTime.UtcNow.AddMinutes(2);// TODO: Change to 7 days
+                tokenInfoToUpdate.ExpiredAt = DateTime.UtcNow.AddDays(30);
                 await _tokenInfoRepository.UpdateTokenInfoAsync(tokenInfoToUpdate);
             }
 
@@ -81,30 +74,47 @@ namespace InventoryMgt.Api.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh(TokenModel tokenModel)
+        public async Task<IActionResult> Refresh(TokenRequest tokenModel)
         {
-            HttpContext.Request.Cookies.TryGetValue("accessToken", out var accessToken);
+            Console.WriteLine("=== ALL COOKIES ===");
+            foreach (var cookie in HttpContext.Request.Cookies)
+            {
+                Console.WriteLine($"Cookie: {cookie.Key} = {cookie.Value}");
+            }
+            Console.WriteLine("===================");
+
+            // I can not do auto validation, since I don't need to pass any payload in req body, if I am using it http only cookies
+            // But, if this api is used by mobile app client, then we must both value in req body
+            tokenModel ??= new TokenRequest();
+
             HttpContext.Request.Cookies.TryGetValue("refreshToken", out var refreshToken);
 
-            if (!string.IsNullOrEmpty(accessToken) && !string.IsNullOrEmpty(refreshToken))
+            if (!string.IsNullOrEmpty(refreshToken))
             {
-                tokenModel.AccessToken = accessToken;
                 tokenModel.RefreshToken = refreshToken;
             }
+            // If no cookies, tokenModel should have values from request body (mobile client)
+            else if (string.IsNullOrEmpty(tokenModel.RefreshToken))
+            {
+                throw new BadRequestException("No valid tokens found in cookies or request body");
+            }
 
-            var principal = _tokenService.GetPrincipalFromExpiredToken(tokenModel.AccessToken) ?? throw new BadRequestException("Invalid expired token");
+            var tokenInfo = await _tokenInfoRepository.GetTokenInfoByRefreshTokenAsync(tokenModel.RefreshToken);
 
-            var username = principal.Identity?.Name ?? "";
-
-            var tokenInfo = await _tokenInfoRepository.GetTokenInfoByUsernameAsync(username);
-            if (tokenInfo == null
-            || tokenInfo.RefreshToken != tokenModel.RefreshToken
-            || tokenInfo.ExpiredAt <= DateTime.UtcNow)
+            if (tokenInfo == null || tokenInfo.ExpiredAt <= DateTime.UtcNow)
             {
                 return BadRequest("Invalid refresh token. Please login again.");
             }
 
-            var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
+            var user = await _authRepo.GetUserByUsernameAsync(tokenInfo.Username);
+            if (user == null)
+            {
+                return BadRequest("Invalid refresh token. Please login again.");
+            }
+
+            var claims = _tokenService.GenerateClaims(user.Username, user.Role);
+
+            var newAccessToken = _tokenService.GenerateAccessToken(claims);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
 
             tokenInfo.RefreshToken = newRefreshToken; // rotating the refresh token
@@ -124,7 +134,6 @@ namespace InventoryMgt.Api.Controllers
             return Ok(newTokenData);
 
         }
-
 
         [Authorize]
         [HttpGet("me")]
@@ -165,7 +174,7 @@ namespace InventoryMgt.Api.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                Path = "/refresh",
+                Path = "/",
                 SameSite = SameSiteMode.None // TODO: change to strict/lax in production
             });
 

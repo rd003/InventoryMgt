@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { RouterModule } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { Nav } from "../shared/models/Nav";
 import NavData from '../data/route.data';
+import { AuthStore } from "../auth/auth.store";
 
 @Component({
   selector: "app-sidebar",
@@ -55,7 +56,7 @@ import NavData from '../data/route.data';
 
       <!-- Bottom Section -->
       <div class="sidebar-bottom">
-        <button mat-button class="nav-item auth-btn">
+        <button mat-button class="nav-item auth-btn" type="button" (click)="logout()">
           <mat-icon>logout</mat-icon>
           <span>Logout</span>
         </button>
@@ -87,8 +88,14 @@ import NavData from '../data/route.data';
 })
 export class SidebarComponent {
   isCollapsed = signal(false);
-
   navItems: Nav[] = NavData;
+  authStore = inject(AuthStore);
+  router = inject(Router);
+
+  logout() {
+    this.authStore.logout();
+    this.router.navigate(['/login']);
+  }
 
   toggleSidebar() {
     this.isCollapsed.update(value => !value);

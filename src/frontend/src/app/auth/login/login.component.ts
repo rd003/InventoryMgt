@@ -49,12 +49,13 @@ export class LoginComponent {
             });
             return;
         }
-
         this.authStore.login(this.loginForm.value as LoginModel);
         this.router.navigate(['/dashboard']);
     }
 
     constructor() {
-
+        if (this.authStore.authenticated()) {
+            this.router.navigate(['/dashboard']);
+        }
     }
 }

@@ -16,6 +16,8 @@ public class TokenInfoConfiguration : IEntityTypeConfiguration<TokenInfo>
         builder.HasIndex(a => a.Username, "uq_token_info_username")
             .IsUnique();
 
+        builder.HasIndex(a => a.RefreshToken, "uq_token_info_refresh_token");
+
         builder.Property(p => p.Id)
         .HasColumnName("id");
 

@@ -13,7 +13,7 @@ export class AuthService {
 
     me = () => this.http.get<UserModel>(this.url + "/me");
 
-    refresh = () => this.http.get<void>(this.url + "/refresh");
+    refresh = () => this.http.post<void>(this.url + "/refresh", {});
 
-    logout = () => this.http.post<void>(this.url + "/logout", null);
+    logout = () => this.http.post<void>(this.url + "/logout", {});
 }
