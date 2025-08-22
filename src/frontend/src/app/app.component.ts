@@ -4,6 +4,7 @@ import { FooterComponent } from "./footer.component";
 import { NotificationComponent } from "./shared/notification.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
 import { AuthStore } from "./auth/auth.store";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   selector: "app-root",
@@ -12,12 +13,18 @@ import { AuthStore } from "./auth/auth.store";
     SidebarComponent,
     FooterComponent,
     NotificationComponent,
+    MatProgressSpinnerModule,
   ],
   template: `
-  @if(!authStore.authenticated()){
+  @if(authStore.loading()){
+    <div class="loading-container">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="loading-text">Loading...</p>
+    </div>
+  }
+  @else if(!authStore.authenticated()){
     <router-outlet />
   }
-  
   @else{
     <div class="app-container">
       <app-sidebar />
@@ -52,6 +59,23 @@ import { AuthStore } from "./auth/auth.store";
         flex: 1;
         overflow-y: auto;
         background-color: #f8fafc;
+      }
+
+      .loading-container {
+        height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #fafafa;
+        gap: 16px;
+      }
+
+      .loading-text {
+        margin: 0;
+        color: #666;
+        font-size: 16px;
       }
     `,
   ]

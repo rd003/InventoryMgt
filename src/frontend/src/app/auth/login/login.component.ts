@@ -5,7 +5,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatIconModule } from "@angular/material/icon";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { LoginModel } from "./login.model";
 import { NotificationComponent } from "../../shared/notification.component";
 import { AuthStore } from "../auth.store";
@@ -29,7 +29,8 @@ export class LoginComponent {
     private fb = inject(FormBuilder);
     private router = inject(Router);
     authStore = inject(AuthStore);
-
+    private route = inject(ActivatedRoute);
+    private returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
     hidePassword = signal(true);
 
     // TODO: remove the value of username and password after testing
@@ -50,12 +51,15 @@ export class LoginComponent {
             return;
         }
         this.authStore.login(this.loginForm.value as LoginModel);
-        this.router.navigate(['/dashboard']);
+
+        if (this.authStore.authenticated()) {
+            this.router.navigateByUrl(this.returnUrl);
+        }
     }
 
     constructor() {
-        if (this.authStore.authenticated()) {
-            this.router.navigate(['/dashboard']);
+        if (this.authStore.authenticated() && !this.authStore.loading()) {
+            this.router.navigateByUrl(this.returnUrl);
         }
     }
 }

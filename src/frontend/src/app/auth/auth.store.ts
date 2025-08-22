@@ -15,7 +15,7 @@ export interface AuthState {
 export class AuthStore {
     private readonly initialState: AuthState = {
         user: null,
-        loading: false,
+        loading: true,
         error: null
     }
     private readonly authService = inject(AuthService);
@@ -46,7 +46,11 @@ export class AuthStore {
         )
     }
     public clearState = () => {
-        this.state.update(() => this.initialState);
+        this.state.set({
+            user: null,
+            loading: false,
+            error: null
+        });
     }
 
     logout = () => {
@@ -99,8 +103,6 @@ export class AuthStore {
     }
 
     constructor() {
-        setTimeout(() => {
-            this.loadStore();
-        }, 0)
+        this.loadStore();
     }
 }
