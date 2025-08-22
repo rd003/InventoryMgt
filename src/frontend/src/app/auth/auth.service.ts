@@ -2,6 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { environment } from "../../environments/environment.development";
 import { HttpClient } from "@angular/common/http";
 import { LoginModel } from "./login/login.model";
+import { UserModel } from "./user.model";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -10,7 +11,7 @@ export class AuthService {
 
     login = (loginData: LoginModel) => this.http.post<void>(this.url + "/login", loginData);
 
-    me = () => this.http.get<any>(this.url + "/me");
+    me = () => this.http.get<UserModel>(this.url + "/me");
 
     refresh = () => this.http.get<void>(this.url + "/refresh");
 

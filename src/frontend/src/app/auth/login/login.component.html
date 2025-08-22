@@ -65,8 +65,9 @@
             </div> -->
 
             <!-- Submit Button -->
-            <button mat-raised-button type="submit" class="login-button" [disabled]="loginForm.invalid || isLoading()">
-                @if (isLoading()) {
+            <button mat-raised-button type="submit" class="login-button"
+                [disabled]="loginForm.invalid || authStore.loading()">
+                @if (authStore.loading()) {
                 <span>
                     <mat-icon class="loading-icon">refresh</mat-icon>
                     Signing in...

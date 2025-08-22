@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -8,6 +8,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { Router } from "@angular/router";
 import { LoginModel } from "./login.model";
 import { NotificationComponent } from "../../shared/notification.component";
+import { AuthStore } from "../auth.store";
 
 @Component({
     selector: "app-login",
@@ -27,13 +28,14 @@ import { NotificationComponent } from "../../shared/notification.component";
 export class LoginComponent {
     private fb = inject(FormBuilder);
     private router = inject(Router);
+    authStore = inject(AuthStore);
 
     hidePassword = signal(true);
-    isLoading = signal(false);
 
+    // TODO: remove the value of username and password after testing
     loginForm: FormGroup = this.fb.group({
-        username: ['', [Validators.required, Validators.minLength(3)]],
-        password: ['', [Validators.required, Validators.minLength(3)]]
+        username: ['admin', [Validators.required, Validators.minLength(3)]],
+        password: ['Admin@123', [Validators.required, Validators.minLength(3)]]
     });;
 
     togglePasswordVisibility(): void {
@@ -47,9 +49,9 @@ export class LoginComponent {
             });
             return;
         }
-        this.isLoading.set(true);
-        const formData: LoginModel = this.loginForm.value;
-        console.log(formData);
+
+        this.authStore.login(this.loginForm.value as LoginModel);
+        this.router.navigate(['/dashboard']);
     }
 
     constructor() {

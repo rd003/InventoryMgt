@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { FooterComponent } from "./footer.component";
 import { NotificationComponent } from "./shared/notification.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
+import { AuthStore } from "./auth/auth.store";
 
 @Component({
   selector: "app-root",
@@ -13,7 +14,7 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
     NotificationComponent,
   ],
   template: `
-  @if(!isAuthenticated){
+  @if(!authStore.authenticated()){
     <router-outlet />
   }
   
@@ -56,6 +57,7 @@ import { SidebarComponent } from "./sidebar/sidebar.component";
   ]
 })
 export class AppComponent {
-  isAuthenticated = false;
+  authStore = inject(AuthStore);
+
   constructor() { }
 }
