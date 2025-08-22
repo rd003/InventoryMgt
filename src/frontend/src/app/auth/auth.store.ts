@@ -51,7 +51,7 @@ export class AuthStore {
             takeUntilDestroyed()
         ).subscribe({
             next: () => {
-                this.loadUser();
+                this.loadStore();
             },
             error: (err) => this.setError(err)
         }
@@ -74,7 +74,7 @@ export class AuthStore {
         }))
     }
 
-    private loadUser = () => {
+    loadStore = () => {
         this.setLoading();
         this.authService.me().pipe(
             takeUntilDestroyed(this.destroyRef)
@@ -96,7 +96,7 @@ export class AuthStore {
 
     constructor() {
         setTimeout(() => {
-            this.loadUser();
+            this.loadStore();
         }, 0)
     }
 }
