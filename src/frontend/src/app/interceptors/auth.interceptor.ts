@@ -1,7 +1,7 @@
 import { HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, catchError, filter, finalize, Observable, switchMap, take, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, filter, finalize, Observable, of, switchMap, take, throwError } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { AuthStore } from '../auth/auth.store';
 
@@ -50,6 +50,11 @@ function handle401Error(req: HttpRequest<unknown>, next: HttpHandlerFn, router: 
 
   // Attempt to refresh the token
   return authService.refresh().pipe(
+    switchMap(() => {
+      // Wait for store to load before retrying
+      authStore.loadStore();
+      return of(null)
+    }),
     switchMap(() => {
       // Refresh successful
       isRefreshing = false;

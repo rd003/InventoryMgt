@@ -94,7 +94,7 @@ export class CategoryFormComponent {
   categoryForm: FormGroup = this.fb.group({
     id: [0],
     categoryName: ["", Validators.required],
-    categoryId: [0],
+    categoryId: [null],
   });
 
   onPost(event: Event) {

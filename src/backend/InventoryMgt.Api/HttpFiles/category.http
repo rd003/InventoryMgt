@@ -1,5 +1,5 @@
 @base_address = http://localhost:5131/api/categories
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiODcyMjc0YjAtYmM0Yy00NjcyLTk2YjYtOWE1YzlkZDdlOTMzIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU1NzUzMTE3LCJleHAiOjE3NTU3NTQwMTcsImlhdCI6MTc1NTc1MzExNywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIn0.Rd44loL-TUJorHA_DIBiYckvBJfKh9Bdf6Ld1pGjXF4
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFkbWluIiwianRpIjoiZjdkYjZmYTctNzg1Yy00NDEzLWFjN2YtZTY0NWUwMGY0ZGZjIiwicm9sZSI6IkFkbWluIiwibmJmIjoxNzU1OTMzNDUwLCJleHAiOjE3NTU5MzM1MTAsImlhdCI6MTc1NTkzMzQ1MCwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo1MTMxIn0.RnY0mz0VXoMXJH7l5mhwNeAfcrVFqASoPxYHp0onl8A
 
 // get all
 GET {{base_address}}
@@ -19,10 +19,7 @@ POST {{base_address}}
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-{
-    "categoryName":"category1",
-    "categoryId": null
-}
+{"id":0,"categoryName":"cc1","categoryId":null}
 
 ###
 PUT {{base_address}}/20
