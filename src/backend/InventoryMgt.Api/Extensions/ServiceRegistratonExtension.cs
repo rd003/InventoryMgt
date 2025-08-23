@@ -14,7 +14,7 @@ public static class ServiceRegistratonExtension
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost:4200").
+                policy.WithOrigins("http://localhost:4200", "http://localhost:3001").
                 AllowCredentials().
                 AllowAnyHeader().
                 AllowAnyMethod().WithExposedHeaders("X-Pagination");

@@ -1,0 +1,80 @@
+# Build outputs
+**/bin/
+**/obj/
+**/out/
+**/publish/
+
+# NuGet packages
+**/packages/
+**/*.nuget.props
+**/*.nuget.targets
+
+# Visual Studio files
+**/.vs/
+**/.vscode/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+
+# IDE files
+**/.idea/
+**/*.swp
+**/*.swo
+
+# OS generated files
+**/.DS_Store
+**/.DS_Store?
+**/._*
+**/.Spotlight-V100
+**/.Trashes
+**/ehthumbs.db
+**/Thumbs.db
+
+# Git
+**/.git/
+**/.gitignore
+**/.gitattributes
+
+# Docker
+**/Dockerfile*
+**/.dockerignore
+**/docker-compose*
+
+# Documentation
+**/README.md
+**/LICENSE
+**/*.md
+
+# Logs
+**/logs/
+**/*.log
+
+# Runtime data
+**/pids
+**/*.pid
+**/*.seed
+**/*.pid.lock
+
+# Test results
+**/TestResults/
+**/test-results/
+**/coverage/
+
+# ASP.NET Core
+**/wwwroot/dist/
+**/ClientApp/dist/
+**/ClientApp/build/
+
+# Entity Framework
+**/Migrations/
+
+# User secrets
+**/appsettings.Development.json
+**/appsettings.Local.json
+**/*.Development.json
+**/*.Local.json
+
+# Temporary files
+**/tmp/
+**/temp/
