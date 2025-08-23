@@ -1,4 +1,4 @@
-# Inventory management (Work in prgress)
+# Inventory management
 
 An `inventory management` project with angular and .net core apis.
 
@@ -31,17 +31,21 @@ An `inventory management` project with angular and .net core apis.
 
 ### A. Backend
 
-1. To work with this project, you must execute this [script](./database/db.sql) in your sql server database.
-2. Open `appsettings.json` and configure the connection string according to your database.
-3. Open `InventoryMgt.Api` in the integrated terminal.
-4. Execute the command `dotnet run`, to run this project.
-5. Keep this application running in that terminal.
+1. Open `appsettings.json` and configure the connection string according to your database.
+2. Open `InventoryMgt.Api` in the integrated terminal.
+3. Execute the command `dotnet run`, to run this project. It will automatically generate the database and seed some data
 
 ### B. Front-end
 
 1. Open the another integrated terminal (keep the terminal open, where your backend project is running).
 2. Execute the command `npm i` to install all the dependencies.
 3. Execute `ng serve --open` to run and open this project in browser.
+4. A login screen will popup and you need to enter these credentials:
+
+```txt
+Username: admin
+password: Admin@123
+```
 
 ## Are you facing problems on migrations?
 
@@ -68,9 +72,32 @@ Note: You need to replace `SomeMigration` to a meaningful name.
 ```sh
 dotnet ef database update --project InventoryMgt.Data --startup-project InventoryMgt.Api
 ```
+---
 
 ## Screenshots
 
+![1](./screenshots/1.png)
+
+![2](./screenshots/2.png)
+
+![3](./screenshots/3.png)
+
+![4](./screenshots/4.png)
+
+![5](./screenshots/5.png)
+
+![6](./screenshots/6.png)
+
+![7](./screenshots/7.png)
+
+![8](./screenshots/8.png)
+
+![9](./screenshots/9.png)
+
+![10](./screenshots/10.png)
+
+![11](./screenshots/11.png)
+
 --- 
 
-🙂 Github star is appreciated.
+A Github ⭐ is appreciated 🙂.

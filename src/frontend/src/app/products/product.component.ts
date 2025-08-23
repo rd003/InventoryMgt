@@ -121,7 +121,7 @@ export class ProductComponent implements OnDestroy {
 
 
     const dialogRef = this.dialog.open(ProductDialogComponent, {
-      data: { product, title: action + " Book", categories, suppliers },
+      data: { product, title: action, categories, suppliers },
     });
 
     dialogRef.componentInstance.sumbit
