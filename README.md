@@ -19,7 +19,13 @@ An `inventory management` project with angular and .net core apis.
 - **UI:** Angular material (UI component library)
 - **State Management:** `Ngrx componnent store` (Almost everywhere) and `service with signal` (For newer features).
 
-## Run this project with docker (coming soon)
+## Run this project with docker
+
+1. In terminal, visit to directory `src`.
+2. Execute the command `docker compose up -d`
+3. Serve the url `http://localhost:3001/` in the browser.
+
+It is the simplest approach to test the app. However, if you want to run it in a dev environment then follw the section below.
 
 ## To run this project in dev environment
 

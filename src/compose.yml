@@ -1,0 +1,51 @@
+services:
+  web_api:
+    container_name: inventory_backend_app
+    build: ./backend
+    image: inventory-api:1.0.0
+    ports:
+      - 8080:8080
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__default=Host=db;Database=inventorydb;Username=postgres;Password=p@55w0rd!
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+    networks:
+      - inventory_network
+  frontend:
+    container_name: inventory_frontend_app
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: inventory-frontend:1.0.0
+    ports:
+      - 3001:8081
+    depends_on:
+      - web_api
+    networks:
+      - inventory_network
+  db:
+    image: postgres:16.9-bullseye
+    container_name: postgres_db
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: inventorydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p@55w0rd!
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      retries: 10
+      start_period: 60s
+      timeout: 10s
+    restart: unless-stopped
+    networks:
+      - inventory_network
+
+networks:
+  inventory_network:
+    driver: bridge

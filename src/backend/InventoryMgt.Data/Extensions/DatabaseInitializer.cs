@@ -21,6 +21,8 @@ public static class DatabaseInitializer
             var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var authRepo = scope.ServiceProvider.GetRequiredService<IAuthRepository>();
 
+            await dbContext.Database.EnsureCreatedAsync();
+
             if (dbContext.Database.GetPendingMigrations().Count() > 0)
             {
                 await dbContext.Database.MigrateAsync();
