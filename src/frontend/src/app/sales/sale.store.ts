@@ -224,7 +224,9 @@ export class SaleStore
       switchMap((sale) =>
         this.saleService.updateSale(sale).pipe(
           tapResponse({
-            next: (response) => this.UpdateSaleRecordOfStore(response),
+            next: (response) => {
+              this.UpdateSaleRecordOfStore(response)
+            },
             error: (error: HttpErrorResponse) => this.setError(error)
           })
         )

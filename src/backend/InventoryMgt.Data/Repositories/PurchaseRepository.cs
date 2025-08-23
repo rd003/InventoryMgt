@@ -73,6 +73,8 @@ public class PurchaseRepository : IPurchaseRepository
                                 quantity=@quantity,
                                 unit_price=@UnitPrice,
                                 description=@Description,
+                                purchase_order_number=@PurchaseOrderNumber,
+                                invoice_number=@InvoiceNumber,
                                 received_date=@ReceivedDate
                                 where id=@Id";
             await connection.ExecuteAsync(updateSql, purchase, transaction);
