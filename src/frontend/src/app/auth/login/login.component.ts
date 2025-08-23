@@ -9,6 +9,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { LoginModel } from "./login.model";
 import { NotificationComponent } from "../../shared/notification.component";
 import { AuthStore } from "../auth.store";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
+import { filter, take } from "rxjs";
 
 @Component({
     selector: "app-login",
@@ -51,15 +53,18 @@ export class LoginComponent {
             return;
         }
         this.authStore.login(this.loginForm.value as LoginModel);
-
-        if (this.authStore.authenticated()) {
-            this.router.navigateByUrl(this.returnUrl);
-        }
+        this.router.navigateByUrl(this.returnUrl);
     }
 
     constructor() {
-        if (this.authStore.authenticated() && !this.authStore.loading()) {
-            this.router.navigateByUrl(this.returnUrl);
-        }
+        toObservable(this.authStore.loaded).pipe(
+            filter(loaded => loaded),
+            take(1),
+            takeUntilDestroyed()
+        ).subscribe(() => {
+            if (this.authStore.authenticated()) {
+                this.router.navigateByUrl(this.returnUrl);
+            }
+        });
     }
 }

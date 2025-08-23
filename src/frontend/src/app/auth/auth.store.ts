@@ -103,6 +103,8 @@ export class AuthStore {
     }
 
     constructor() {
-        this.loadStore();
+        setTimeout(() => {
+            this.loadStore();
+        }, 0)
     }
 }
