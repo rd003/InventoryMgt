@@ -12,9 +12,9 @@ An `inventory management` project with angular and .net core apis.
 
 ## Tech Stack
 
-- **Backend:** Asp.net core web api (9.0) (upgrade from .net 8)
+- **Backend:** Asp.net core web api (10.0) (upgrade from .net 8)
 - **Database:** Postgres (previously sql server 2022)
-- **ORM:** Dapper(Most of the places), EF Core
+- **ORM:** Dapper(Most of the places), Entity Framework Core
 - **Frontend:** Angular 20  (upgraded from v18)
 - **UI:** Angular material (UI component library)
 - **State Management:** `Ngrx componnent store` (Almost everywhere) and `service with signal` (For newer features).
@@ -29,7 +29,7 @@ It is the simplest approach to test the app. However, if you want to run it in a
 
 ## To run this project in dev environment
 
-- Make sure you have installed `dotnet 9.0` sdk, a latest version node js and angular cli.
+- Make sure you have installed `dotnet 10.0` sdk, a latest version `node js` and `angular cli`.
 - **Clone this project:** Open a terminal and run `git clone https://github.com/rd003/InventroyMgt.git`
 - `cd `
 - With command `code .`, your project will be opened in VS Code.
