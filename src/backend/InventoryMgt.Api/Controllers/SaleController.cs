@@ -25,7 +25,6 @@ public class SaleController : ControllerBase
     }
 
     [HttpGet]
-    [AllowAnonymous]
     public async Task<IActionResult> GetSales(int page = 1, int limit = 4, string? productName = null, DateTime? dateFrom = null, DateTime? dateTo = null, string? sortColumn = null, string? sortDirection = null)
     {
         if (sortDirection != null && !new[] { "asc", "desc" }.Contains(sortDirection))

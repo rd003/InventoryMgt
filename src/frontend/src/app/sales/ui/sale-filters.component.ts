@@ -15,16 +15,16 @@ import { getDateWithoutTimezone } from "../../utils/date-utils";
 import { debounceTime, tap } from "rxjs";
 
 @Component({
-    selector: "app-sale-filters",
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatDatepickerModule,
-        ReactiveFormsModule,
-    ],
-    providers: [provideNativeDateAdapter()],
-    template: `
+  selector: "app-sale-filters",
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    ReactiveFormsModule,
+  ],
+  providers: [provideNativeDateAdapter()],
+  template: `
     <mat-form-field appearance="outline" style="width: 300px;">
       <mat-label>Product Name</mat-label>
       <input [formControl]="productName" matInput />
@@ -49,21 +49,21 @@ import { debounceTime, tap } from "rxjs";
     <button
       mat-raised-button
       color="accent"
-      style="height: 54px;width:100px;font-size:16px"
+      class="large-button"
       (click)="clearFilters()"
     >
       Clear
     </button>
   `,
-    styles: [
-        `
+  styles: [
+    `
       :host {
         display: flex;
         gap: 10px;
       }
     `,
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleFiltersComponent {
   @Output() searchProduct = new EventEmitter<string | null>();

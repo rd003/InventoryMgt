@@ -1,7 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { PaginatedPurchase, PurchaseModel } from "./purchase.model";
 import { HttpErrorResponse } from "@angular/common/http";
-import { ComponentStore, OnStateInit } from '@ngrx/component-store';import { tapResponse } from '@ngrx/operators';
+import { ComponentStore, OnStateInit } from '@ngrx/component-store';
+import { tapResponse } from '@ngrx/operators';
 
 import { PurchaseService } from "./purchase.service";
 import { combineLatest, exhaustMap, switchMap, tap } from "rxjs";
@@ -37,8 +38,7 @@ const initialState: PurchaseState = {
 @Injectable()
 export class PurchaseStore
   extends ComponentStore<PurchaseState>
-  implements OnStateInit
-{
+  implements OnStateInit {
   private readonly purchaseService = inject(PurchaseService);
 
   private readonly purchases$ = this.select((s) => s.purchases);
@@ -198,13 +198,13 @@ export class PurchaseStore
                 )
                 .pipe(
                   tapResponse({
-    next: (response) => {
-        this.handlePurchaseResponse(response);
-    },
-    error: (error: HttpErrorResponse) => {
-        this.setError(error);
-    }
-})
+                    next: (response) => {
+                      this.handlePurchaseResponse(response);
+                    },
+                    error: (error: HttpErrorResponse) => {
+                      this.setError(error);
+                    }
+                  })
                 );
             }
           )
@@ -226,9 +226,9 @@ export class PurchaseStore
       switchMap((purchase) =>
         this.purchaseService.add(purchase).pipe(
           tapResponse({
-    next: (response) => this.addSinglePurchaseToState(response),
-    error: (error: HttpErrorResponse) => this.setError(error)
-})
+            next: (response) => this.addSinglePurchaseToState(response),
+            error: (error: HttpErrorResponse) => this.setError(error)
+          })
         )
       )
     )
@@ -239,9 +239,9 @@ export class PurchaseStore
       switchMap((purchase) =>
         this.purchaseService.update(purchase).pipe(
           tapResponse({
-    next: (response) => this.updatePurchaseFromState(response),
-    error: (error: HttpErrorResponse) => this.setError(error)
-})
+            next: (response) => this.updatePurchaseFromState(response),
+            error: (error: HttpErrorResponse) => this.setError(error)
+          })
         )
       )
     )
@@ -253,9 +253,9 @@ export class PurchaseStore
       switchMap((id) =>
         this.purchaseService.delete(id).pipe(
           tapResponse({
-    next: () => this.deletePurchaseFromModel(id),
-    error: (error: HttpErrorResponse) => this.setError(error)
-})
+            next: () => this.deletePurchaseFromModel(id),
+            error: (error: HttpErrorResponse) => this.setError(error)
+          })
         )
       )
     )

@@ -15,10 +15,11 @@ import { SaleFiltersComponent } from "./ui/sale-filters.component";
 import { SaleModel } from "./sale.model";
 import { capitalize } from "../utils/init-cap.util";
 import { ProductWithStock } from "../products/product-with-stock.model";
-import { Observable, Subject, switchMap, takeUntil } from "rxjs";
+import { Observable, Subject, switchMap, takeUntil, take, tap } from "rxjs";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { SaleDialogComponent } from "./ui/sale-dialog.component";
 import { SalePaginatorComponent } from "./ui/sale-paginator.component";
+import { SaleService } from "./sale.service";
 
 @Component({
   selector: "app-sale",
@@ -44,11 +45,22 @@ import { SalePaginatorComponent } from "./ui/sale-paginator.component";
           <mat-spinner diameter="50"></mat-spinner>
         </div>
         } @else {
+         <div style="display:flex;gap:10px;align-items:center">
         <app-sale-filters
           (clearFilter)="onClearFilter()"
           (searchProduct)="onSearch($event)"
           (filterByPurchaseDate)="onDateFilter($event)"
         />
+        
+          <button
+            mat-raised-button
+            class="large-button"
+            color="accent"
+            (click)="onDownloadPdf()"
+          >
+            Download report
+          </button>
+        </div> 
         @if(vm.sales && vm.sales.length > 0){
           <app-sale-list
             [sales]="vm.sales"
@@ -84,6 +96,7 @@ import { SalePaginatorComponent } from "./ui/sale-paginator.component";
 export class SaleComponent implements OnDestroy {
   saleStore = inject(SaleStore);
   productService = inject(ProductService);
+  saleService = inject(SaleService);
   products$: Observable<ProductWithStock[]> =
     this.productService.getAllProductsWithStock();
   destroyed$ = new Subject<boolean>();
@@ -171,6 +184,34 @@ export class SaleComponent implements OnDestroy {
   onPageSelect(pageData: { page: number; limit: number }) {
     this.saleStore.setPage(pageData.page);
     this.saleStore.setLimit(pageData.limit);
+  }
+
+  onDownloadPdf() {
+    this.saleStore.vm$.pipe(
+      take(1),
+      switchMap((vm) =>
+        this.saleService.downloadPdf(
+          vm.productName,
+          vm.dateFrom,
+          vm.dateTo,
+          vm.sortColumn,
+          vm.sortDirection
+        )
+      ),
+      tap((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `sale-${new Date().toISOString().split('T')[0]}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        }, 300);
+      }),
+      takeUntil(this.destroyed$)
+    ).subscribe();
   }
 
   constructor() { }
