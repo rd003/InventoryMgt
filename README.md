@@ -10,18 +10,18 @@ A full-stack **Inventory Management System** built with Angular and .NET Core AP
 
 ## 📑 Table of Contents
 
-- [✨ Features](#features)
-- [🛠️ Tech Stack](#tech-stack)
-- [📜 Project History](#project-history)
-- [🚀 Quick Start with Docker](#quick-start-with-docker)
-- [💻 Development Setup](#development-setup)
+- [✨ Features](#-features)
+- [🛠️ Tech Stack](#-tech-stack)
+- [📜 Project History](#-project-history)
+- [🚀 Quick Start with Docker](#-quick-start-with-docker)
+- [💻 Development Setup](#-development-setup)
   - [A. Backend](#a-backend)
   - [B. Frontend](#b-frontend)
-- [🔧 Entity Framework Migrations](#entity-framework-migrations)
-- [📸 Screenshots](#screenshots)
-- [🤝 Contributing](#contributing)
-- [📄 License](#license)
-- [⭐ Show Your Support](#show-your-support)
+- [🔧 Entity Framework Migrations](#-entity-framework-migrations)
+- [📸 Screenshots](#-screenshots)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [⭐ Show Your Support](#-show-your-support)
 
 ## ✨ Features
 
