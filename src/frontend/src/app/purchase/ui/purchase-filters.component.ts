@@ -2,8 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Output,
-  inject,
+  Output
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
@@ -17,26 +16,26 @@ import { getDateWithoutTimezone } from "../../utils/date-utils";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 @Component({
-    selector: "app-purchase-filters",
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatDatepickerModule,
-        MatButtonModule,
-        MatAutocompleteModule,
-    ],
-    providers: [provideNativeDateAdapter()],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    styles: [
-        `
+  selector: "app-purchase-filters",
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatButtonModule,
+    MatAutocompleteModule,
+  ],
+  providers: [provideNativeDateAdapter()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    `
       :host {
         display: flex;
         gap: 10px;
       }
     `,
-    ],
-    template: `
+  ],
+  template: `
     <mat-form-field appearance="outline" style="width: 300px;">
       <mat-label>Product Name</mat-label>
       <input [formControl]="productName" matInput />
@@ -61,7 +60,7 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
     <button
       mat-raised-button
       color="accent"
-      style="height: 54px;width:100px;font-size:16px"
+      class="large-button"
       (click)="clearFilters()"
     >
       Clear

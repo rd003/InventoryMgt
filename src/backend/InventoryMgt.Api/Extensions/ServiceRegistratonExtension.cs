@@ -1,5 +1,6 @@
 using InventoryMgt.Api.Middlewares;
 using InventoryMgt.Api.Services;
+using InventoryMgt.Shared.Services;
 
 namespace InventoryMgt.Api.Extensions;
 
@@ -10,6 +11,7 @@ public static class ServiceRegistratonExtension
         services.AddControllers();
         services.AddTransient<ExceptionMiddleware>();
         services.AddTransient<ITokenService, TokenService>();
+        services.AddTransient<IPdfService, PdfService>();
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(policy =>

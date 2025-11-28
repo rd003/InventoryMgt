@@ -2,6 +2,7 @@ using System.Text.Json;
 using InventoryMgt.Shared.CustomExceptions;
 using InventoryMgt.Shared.DTOs;
 using InventoryMgt.Shared.Repositories;
+using InventoryMgt.Shared.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,18 @@ namespace InventoryMgt.Api.Controllers;
 [Authorize]
 [ApiController]
 [Route("api/sales")]
-public class SaleController(ISaleRepository saleRepository, IStockRepository stockRepository) : ControllerBase
+public class SaleController : ControllerBase
 {
-    private readonly ISaleRepository _saleRepo = saleRepository;
-    private readonly IStockRepository _stockRepo = stockRepository;
+    private readonly ISaleRepository _saleRepo;
+    private readonly IStockRepository _stockRepo;
+    private readonly IPdfService _pdfService;
+
+    public SaleController(ISaleRepository saleRepository, IStockRepository stockRepository, IPdfService pdfService)
+    {
+        _saleRepo = saleRepository;
+        _stockRepo = stockRepository;
+        _pdfService = pdfService;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetSales(int page = 1, int limit = 4, string? productName = null, DateTime? dateFrom = null, DateTime? dateTo = null, string? sortColumn = null, string? sortDirection = null)
@@ -28,6 +37,26 @@ public class SaleController(ISaleRepository saleRepository, IStockRepository sto
         {
             throw new BadRequestException($"only {string.Join(",", allowedSortColumns)} are allowed as sortColumn");
         }
+
+        // Check if PDF is requested via Accept header
+        var acceptHeader = Request.Headers["Accept"].ToString();
+        if (acceptHeader.Contains("application/pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            // For PDF, get all matching sales (no pagination)
+            var allSales = await _saleRepo.GetSales(1, int.MaxValue, productName, dateFrom, dateTo, sortColumn, sortDirection);
+            var pdfBytes = _pdfService.GenerateSaleReportPdf(
+                allSales.Sales,
+                productName,
+                dateFrom,
+                dateTo,
+                sortColumn,
+                sortDirection);
+
+            var fileName = $"SalesReport_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
+            return File(pdfBytes, "application/pdf", fileName);
+        }
+
+        // Default: return JSON
         var response = await _saleRepo.GetSales(page, limit, productName, dateFrom, dateTo, sortColumn, sortDirection);
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(response.Pagination));
         return Ok(response.Sales);

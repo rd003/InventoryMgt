@@ -2,6 +2,7 @@ using System.Text.Json;
 using InventoryMgt.Shared.CustomExceptions;
 using InventoryMgt.Shared.DTOs;
 using InventoryMgt.Shared.Repositories;
+using InventoryMgt.Shared.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +14,12 @@ namespace InventoryMgt.Api.Controllers;
 public class PurchaseController : ControllerBase
 {
     private readonly IPurchaseRepository _purchaseRepository;
-    public PurchaseController(IPurchaseRepository purchaseRepository)
+    private readonly IPdfService _pdfService;
+
+    public PurchaseController(IPurchaseRepository purchaseRepository, IPdfService pdfService)
     {
         _purchaseRepository = purchaseRepository;
+        _pdfService = pdfService;
     }
 
     [HttpPost]
@@ -69,6 +73,26 @@ public class PurchaseController : ControllerBase
         {
             throw new BadRequestException($"only {string.Join(',', allowedSortColumns)} columns allowed");
         }
+
+        // Check if PDF is requested via Accept header
+        var acceptHeader = Request.Headers["Accept"].ToString();
+        if (acceptHeader.Contains("application/pdf", StringComparison.OrdinalIgnoreCase))
+        {
+            // For PDF, get all matching purchases (no pagination)
+            var allPurchases = await _purchaseRepository.GetPurchases(1, int.MaxValue, productName, dateFrom, dateTo, sortColumn, sortDirection);
+            var pdfBytes = _pdfService.GeneratePurchaseReportPdf(
+                allPurchases.Purchases,
+                productName,
+                dateFrom,
+                dateTo,
+                sortColumn,
+                sortDirection);
+
+            var fileName = $"PurchaseReport_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
+            return File(pdfBytes, "application/pdf", fileName);
+        }
+
+        // Default: return JSON
         var paginatedPurchase = await _purchaseRepository.GetPurchases(page, limit, productName, dateFrom, dateTo, sortColumn, sortDirection);
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginatedPurchase.Pagination));
         return Ok(paginatedPurchase.Purchases);

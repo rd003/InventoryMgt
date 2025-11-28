@@ -5,8 +5,12 @@ using InventoryMgt.Data.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure QuestPDF license (Community license for individuals and small businesses)
+QuestPDF.Settings.License = LicenseType.Community;
 
 DapperUtil.ConfigureDapper();
 

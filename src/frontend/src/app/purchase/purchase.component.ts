@@ -7,6 +7,7 @@ import {
 import { provideComponentStore } from "@ngrx/component-store";
 import { PurchaseStore } from "./purchase.store";
 import { AsyncPipe } from "@angular/common";
+import { PurchaseService } from "./purchase.service";
 import { PurchaseListComponent } from "./ui/purchase-list.component";
 import { capitalize } from "../utils/init-cap.util";
 import { PurchaseModel } from "./purchase.model";
@@ -14,7 +15,7 @@ import { PurchasePaginatorComponent } from "./ui/purchase-pagination.component";
 import { PurchaseFilters } from "./ui/purchase-filters.component";
 import { MatButtonModule } from "@angular/material/button";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { Observable, Subject, map, takeUntil, tap } from "rxjs";
+import { Observable, Subject, map, take, takeUntil, tap, switchMap } from "rxjs";
 import { PurchaseDialogComponent } from "./ui/purchase-dialog.component";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { ProductService } from "../products/product.service";
@@ -30,7 +31,7 @@ import { ProductWithStock } from "../products/product-with-stock.model";
     MatButtonModule,
     MatProgressSpinnerModule,
     MatDialogModule,
-    AsyncPipe,
+    AsyncPipe
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideComponentStore(PurchaseStore)],
@@ -55,12 +56,23 @@ import { ProductWithStock } from "../products/product-with-stock.model";
         </div>
         }
 
-        <app-purchase-filters
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <app-purchase-filters
             (searchProduct)="onSearch($event)"
             (filterByPurchaseDate)="onDateFilter($event)"
             (clearFilter)="onClearFilter()"
           />
-       
+
+          <button
+            mat-raised-button
+            class="large-button"
+            color="accent"
+            (click)="onDownloadPdf()"
+          >
+            Download report
+          </button>
+        </div>
+                
         @if(vm.purchases && vm.purchases.length > 0){
           <app-purchase-list
             [purchases]="vm.purchases"
@@ -145,6 +157,36 @@ export class PurchaseComponent implements OnDestroy {
     if (window.confirm("Are you sure to delete??")) {
       this.purchaseStore.deletePurchase(purchase.id);
     }
+  }
+
+  purchaseService = inject(PurchaseService);
+
+  onDownloadPdf() {
+    this.purchaseStore.vm$.pipe(
+      take(1),
+      switchMap((vm) =>
+        this.purchaseService.downloadPdf(
+          vm.productName,
+          vm.dateFrom,
+          vm.dateTo,
+          vm.sortColumn,
+          vm.sortDirection
+        )
+      ),
+      tap((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `purchases-${new Date().toISOString().split('T')[0]}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => {
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        }, 300);
+      }),
+      takeUntil(this.destroyed$)
+    ).subscribe();
   }
 
   ngOnDestroy(): void {
