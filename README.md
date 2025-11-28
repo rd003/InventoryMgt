@@ -1,86 +1,199 @@
-# Inventory management
+# Inventory Management System
 
-An `inventory management` project with angular and .net core apis.
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
+[![Angular](https://img.shields.io/badge/Angular-20-DD0031?logo=angular)](https://angular.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## When have I started it and feature upgrades?
+A full-stack **Inventory Management System** built with Angular and .NET Core APIs, featuring comprehensive book inventory tracking, sales and purchase management, supplier management, and user authentication.
 
-- I have built this project in **early 2024** with `.net 8 ` and `angular 17`. I had created two separate github repositories for `front-end` and `backend`. Now, I have moved them to a single repository.
-- I have upgraded it to `.NET 9` and `Angular 20`.
-- I have used `sql server 2022` as a database. I have used `stored procedures` in all the places. I have taken a challange and migrated it to `PostgreSQL` to see how comfortable am I with Postgres without entity framework and what challanges we face during migrations. It was not easy but fun ride.
-- I also have added feautres like `suppliers` and `authentication`.
-- I have added `entity framework core` for future updates and specially for migrations. I use two machines back and forth and **it was hard to maintain both dev databases**. Entity framework migrations helped me with that. Howeverm I haven't used it anywhere yet. May be I will use it authentication feature (yeah, I am working on this feature).
+## 📑 Table of Contents
 
-## Tech Stack
+- [✨ Features](#features)
+- [🛠️ Tech Stack](#tech-stack)
+- [📜 Project History](#project-history)
+- [🚀 Quick Start with Docker](#quick-start-with-docker)
+- [💻 Development Setup](#development-setup)
+  - [A. Backend](#a-backend)
+  - [B. Frontend](#b-frontend)
+- [🔧 Entity Framework Migrations](#entity-framework-migrations)
+- [📸 Screenshots](#screenshots)
+- [🤝 Contributing](#contributing)
+- [📄 License](#license)
+- [⭐ Show Your Support](#show-your-support)
 
-- **Backend:** Asp.net core web api (10.0) (upgrade from .net 8)
-- **Database:** Postgres (previously sql server 2022)
-- **ORM:** Dapper(Most of the places), Entity Framework Core
-- **Frontend:** Angular 20  (upgraded from v18)
-- **UI:** Angular material (UI component library)
-- **State Management:** `Ngrx componnent store` (Almost everywhere) and `service with signal` (For newer features).
+## ✨ Features
 
-## Run this project with docker
+- **📚 Book Management**: Add, edit, delete, and search books with detailed information
+- **📊 Inventory Tracking**: Real-time inventory monitoring and stock level management
+- **💰 Sales Management**: Record and track sales transactions with PDF report generation
+- **🛒 Purchase Management**: Manage purchase orders and supplier transactions with PDF export
+- **🏢 Supplier Management**: Maintain supplier information and relationships
+- **👤 User Authentication**: Secure login system with role-based access control
+- **📄 PDF Reports**: Generate detailed PDF reports for sales and purchase records
+- **🎨 Modern UI**: Clean and responsive interface built with Angular Material
+- **🔍 Advanced Search**: Filter and search across all entities
+- **📱 Responsive Design**: Works seamlessly on desktop and mobile devices
 
-1. In terminal, visit to directory `src`.
-2. Execute the command `docker compose up -d`
-3. Serve the url `http://localhost:3001/` in the browser.
+## 🛠️ Tech Stack
 
-It is the simplest approach to test the app. However, if you want to run it in a dev environment then follw the section below.
+- **Backend:** ASP.NET Core Web API 10.0
+- **Database:** PostgreSQL 16 (migrated from SQL Server 2022)
+- **ORM:** Dapper (primary) + Entity Framework Core (for migrations)
+- **Frontend:** Angular 20
+- **UI Library:** Angular Material
+- **State Management:** NgRx Component Store & Signals
+- **Containerization:** Docker & Docker Compose
 
-## To run this project in dev environment
+## 📜 Project History
 
-- Make sure you have installed `dotnet 10.0` sdk, a latest version `node js` and `angular cli`.
-- **Clone this project:** Open a terminal and run `git clone https://github.com/rd003/InventroyMgt.git`
-- `cd `
-- With command `code .`, your project will be opened in VS Code.
-- You need to run both projects separately:
+This project has evolved significantly since its inception:
+
+**Early 2024 - Initial Development**
+- Started with `.NET 8` and `Angular 17`
+- Originally maintained as two separate repositories (frontend & backend)
+- Used SQL Server 2022 with stored procedures
+
+**Major Upgrades & Migrations**
+- ✅ Upgraded to `.NET 10` and `Angular 20`
+- ✅ Migrated from SQL Server to `PostgreSQL` - A challenging but rewarding experience that deepened my understanding of database migrations without relying solely on Entity Framework
+- ✅ Consolidated into a single monorepo for better maintainability
+
+**Feature Additions**
+- ✅ Supplier management system
+- ✅ User authentication and authorization
+- ✅ PDF report generation for sales and purchases
+- ✅ Enhanced UI with Angular Material
+
+**Technical Improvements**
+- ✅ Added Entity Framework Core for database migrations (maintaining dual databases across machines was challenging!)
+- ✅ Implemented NgRx Component Store for state management
+- ✅ Adopted Angular Signals for newer features
+- ✅ Docker support for easy deployment
+
+## 🚀 Quick Start with Docker
+
+The easiest way to get started is using Docker:
+
+1. Navigate to the `src` directory:
+   ```bash
+   cd src
+   ```
+2. Start the containers:
+   ```bash
+   docker compose up -d
+   ```
+3. Open your browser and visit: `http://localhost:3001/`
+
+That's it! The application should be running with all dependencies configured.
+
+## 💻 Development Setup
+
+**Prerequisites:**
+- .NET 10.0 SDK
+- Node.js (latest LTS version)
+- Angular CLI
+- PostgreSQL 16 
+
+**Installation Steps:**
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rd003/InventoryMgt.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd InventoryMgt
+   ```
+
+3. Open in VS Code (optional):
+   ```bash
+   code .
+   ```
+
+You'll need to set up both the backend and frontend separately:
 
 ### A. Backend
 
-1. Open `appsettings.json` and configure the connection string according to your database.
-2. Open `InventoryMgt.Api` in the integrated terminal.
-3. Execute the command `dotnet run`, to run this project. It will automatically generate the database and seed some data
+1. Navigate to the backend API directory:
+   ```bash
+   cd backend/InventoryMgt.Api
+   ```
 
-### B. Front-end
+2. Update the connection string in `appsettings.json`:
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Host=localhost;Database=InventoryMgtDb;Username=your_user;Password=your_password"
+   }
+   ```
 
-1. Open the another integrated terminal (keep the terminal open, where your backend project is running).
-2. Execute the command `npm i` to install all the dependencies.
-3. Execute `ng serve --open` to run and open this project in browser.
-4. A login screen will popup and you need to enter these credentials:
+3. Run the application:
+   ```bash
+   dotnet run
+   ```
+   
+   The database will be automatically created and seeded with initial data on first run.
 
+### B. Frontend
+
+1. Open a new terminal and navigate to the frontend directory:
+   ```bash
+   cd frontend/InventoryMgt.Client
+   ```
+   *(Keep the backend terminal running)*
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   ng serve --open
+   ```
+
+4. The application will open in your browser. Use these credentials to log in:
+   ```
+   Username: admin
+   Password: Admin@123
+   ```
+
+## 🔧 Entity Framework Migrations
+
+If you encounter issues running migrations with the .NET CLI (due to multiple projects), use these commands:
+
+**Common Error:**
 ```txt
-Username: admin
-password: Admin@123
+Unable to create a 'DbContext' of type 'RuntimeType'...
 ```
 
-## Are you facing problems on migrations?
+**Solution:**
 
-You might get error while executing them using ` dot net CLI`, because we have multiple projects. You won't face this problem while using `Package Manage Console` of `Visual Studio`.
-
-Error might be something like this:
-
-```txt
-Unable to create a 'DbContext' of type 'RuntimeType'. The exception 'Unable to resolve service for type 'Microsoft.EntityFrameworkCore.DbContextOptions`1[InventoryMgt.Data.models.AppDbContext]' while attempting to activate 'InventoryMgt.Data.models.AppDbContext'.' was thrown while attempting to create an instance. For the different patterns supported at design time, see https://go.microsoft.com/fwlink/?linkid=851728
+Navigate to the `backend` directory first:
+```bash
+cd backend
 ```
 
-Visit to the root directory of backend project, which named `backend` in our case. So visit to `backend` directory and execute these commands in a sequece:
-
-**Creating migration:**
-
-```sh
-dotnet ef migrations add SomeMigration --project InventoryMgt.Data --startup-project InventoryMgt.Api
+**Creating a Migration:**
+```bash
+dotnet ef migrations add YourMigrationName --project InventoryMgt.Data --startup-project InventoryMgt.Api
 ```
+*Replace `YourMigrationName` with a descriptive name (e.g., `AddSupplierTable`)*
 
-Note: You need to replace `SomeMigration` to a meaningful name.
-
-**Update database:** However, this project can apply migration while you run it. But, in case you manually want to run it. 
-
-```sh
+**Updating the Database:**
+```bash
 dotnet ef database update --project InventoryMgt.Data --startup-project InventoryMgt.Api
 ```
+
+> **Note:** Migrations are automatically applied when you run the application, but you can manually execute them using the command above.
+
+> **Tip:** If using Visual Studio, you can use the Package Manager Console instead, which handles multi-project solutions more gracefully.
+
 ---
 
-## Screenshots
+## 📸 Screenshots
 
 ![1](./screenshots/1.png)
 
@@ -104,6 +217,26 @@ dotnet ef database update --project InventoryMgt.Data --startup-project Inventor
 
 ![11](./screenshots/11.png)
 
---- 
+---
 
-A Github ⭐ is appreciated 🙂.
+## 🤝 Contributing
+
+Contributions are welcome! If you'd like to contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## ⭐ Show Your Support
+
+If you found this project helpful, please consider giving it a star on GitHub! ⭐
+
+**Built with ❤️ by [rd003](https://github.com/rd003)**
