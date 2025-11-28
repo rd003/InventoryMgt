@@ -11,7 +11,7 @@ A full-stack **Inventory Management System** built with Angular and .NET Core AP
 ## 📑 Table of Contents
 
 - [✨ Features](#-features)
-- [🛠️ Tech Stack](#-tech-stack)
+- [🛠️ Tech Stack](#%EF%B8%8F-tech-stack)
 - [📜 Project History](#-project-history)
 - [🚀 Quick Start with Docker](#-quick-start-with-docker)
 - [💻 Development Setup](#-development-setup)
